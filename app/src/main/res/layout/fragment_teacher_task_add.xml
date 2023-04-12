@@ -8,8 +8,6 @@
     tools:context=".fragment.teacher.TeacherTaskAddFragment">
 
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -37,6 +35,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:src="@drawable/baseline_arrow_back_ios_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -10,17 +10,14 @@ import androidx.navigation.fragment.findNavController
 import com.mkrlabs.pmisdefence.R
 import kotlinx.coroutines.delay
 
-
 class SplashFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,7 +30,7 @@ class SplashFragment : Fragment() {
 
     private  suspend  fun  gotToHomeFragment(){
         delay(3000)
-        findNavController().navigate(R.id.action_splashFragment_to_signUpFragment)
+        findNavController().navigate(R.id.action_splashFragment_to_teacherTaskAddFragment)
     }
 
 
