@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center|bottom"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Task Description"
+        android:textSize="20sp"
+        android:textColor="@color/primaryColor"
+        android:fontFamily="@font/montserrat_alternates"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="task name"
+        android:fontFamily="@font/montserrat_alternates"
+        android:background="@drawable/edit_text_border_shape"
+        android:padding="10dp"
+        android:layout_margin="16dp"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:hint="Description"
+        android:fontFamily="@font/montserrat_alternates"
+        android:background="@drawable/edit_text_border_shape"
+        android:padding="10dp"
+        android:layout_margin="16dp"
+        />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Add Task"
+        android:fontFamily="@font/montserrat_alternates"
+        android:textAllCaps="false"
+        />
+
+
+
+
+
+
+</LinearLayout>
