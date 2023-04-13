@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_splashFragment_to_teacherAddMemberFragment"
             app:destination="@id/teacherAddMemberFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_projectDetailsFragment"
+            app:destination="@id/projectDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -59,4 +62,9 @@
         android:name="com.mkrlabs.pmisdefence.fragment.teacher.TeacherTaskAddFragment"
         android:label="fragment_teacher_task_add"
         tools:layout="@layout/fragment_teacher_task_add" />
+    <fragment
+        android:id="@+id/projectDetailsFragment"
+        android:name="com.mkrlabs.pmisdefence.fragment.ProjectDetailsFragment"
+        android:label="fragment_prjecet_details"
+        tools:layout="@layout/fragment_prjecet_details" />
 </navigation>

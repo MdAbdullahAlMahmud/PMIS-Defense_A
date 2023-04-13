@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">PMIS</string>
+    <string name="hintSearchStudent">Search Student</string>
+    <string name="hintTeamName">Enter team name</string>
+    <string name="hintprojectId">Project ID</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
-    <string name="hintSearchStudent">Search Student</string>
 </resources>
