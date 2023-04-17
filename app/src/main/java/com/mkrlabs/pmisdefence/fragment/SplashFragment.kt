@@ -25,7 +25,8 @@ class SplashFragment : Fragment() {
 
     private  suspend  fun  gotToHomeFragment(){
         delay(3000)
-        findNavController().navigate(R.id.action_splashFragment_to_projectDetailsFragment)
+        //findNavController().navigate(R.id.action_splashFragment_to_projectDetailsFragment)
+        findNavController().navigate(R.id.action_splashFragment_to_chatFragment)
     }
 
 }

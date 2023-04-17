@@ -5,17 +5,33 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.mkrlabs.pmisdefence.R
+import com.mkrlabs.pmisdefence.databinding.FragmentChatTabBinding
+import com.mkrlabs.pmisdefence.util.Constant
 
 class ChatTabFragment : Fragment() {
 
-
-
+    lateinit var binding : FragmentChatTabBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_chat_tab, container, false)
+
+        binding = FragmentChatTabBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.superVisorChatItem.setOnClickListener{
+            Toast.makeText(view.context,"Clicked",Toast.LENGTH_SHORT).show()
+
+        }
+
+
     }
 
 

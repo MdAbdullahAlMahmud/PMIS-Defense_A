@@ -7,9 +7,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="activeColor">#00FF69</color>
+    <color name="idleColor">#E1DEDE</color>
 
 
     <color name="primaryColor">#1B75CC</color>
     <color name="backgroundColor">#195A98</color>
+    <color name="materialOrange">#FF5252</color>
+    <color name="choiceColor">#ADD8E6</color>
+
+
 
 </resources>

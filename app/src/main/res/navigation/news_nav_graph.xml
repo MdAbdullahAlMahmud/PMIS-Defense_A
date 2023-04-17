@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_splashFragment_to_projectDetailsFragment"
             app:destination="@id/projectDetailsFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -67,4 +70,18 @@
         android:name="com.mkrlabs.pmisdefence.fragment.ProjectDetailsFragment"
         android:label="fragment_prjecet_details"
         tools:layout="@layout/fragment_prjecet_details" />
+    <fragment
+        android:id="@+id/chatTabFragment"
+        android:name="com.mkrlabs.pmisdefence.fragment.project_details_tab.ChatTabFragment"
+        android:label="fragment_chat_tab"
+        tools:layout="@layout/fragment_chat_tab" >
+        <action
+            android:id="@+id/action_chatTabFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.mkrlabs.pmisdefence.fragment.project_details_tab.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>
