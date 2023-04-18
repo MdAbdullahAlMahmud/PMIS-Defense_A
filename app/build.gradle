@@ -1,6 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'dagger.hilt.android.plugin'
+
+
 }
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
@@ -52,10 +56,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
 
 
-
-
-
-
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
@@ -94,7 +94,16 @@ dependencies {
 
 
 
+    //DI
+    implementation 'com.google.dagger:hilt-android:2.38.1'
+    kapt 'com.google.dagger:hilt-android-compiler:2.38.1'
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+    implementation "androidx.activity:activity-ktx:1.4.0"
 
+    //Firebase Auth
+    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
 
 

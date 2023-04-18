@@ -12,7 +12,6 @@ import com.mkrlabs.pmisdefence.databinding.FragmentSignUpBinding
 class SignUpFragment : Fragment() {
 
 
-
     lateinit var binding: FragmentSignUpBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +29,9 @@ class SignUpFragment : Fragment() {
             findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
 
         }
+
+
+
 
 
     }

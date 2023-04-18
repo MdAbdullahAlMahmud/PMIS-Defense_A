@@ -24,7 +24,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="76dp"
-        android:fontFamily="@font/rock_salt"
         android:text="@string/app_name"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,13 +68,13 @@
 
 
         <EditText
+            android:id="@+id/signUpNameEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:fontFamily="@font/montserrat_alternates_extralight"
             android:hint="Name"
             android:inputType="textPersonName"
             android:textColorHint="@color/white"
@@ -83,6 +82,7 @@
             />
 
         <EditText
+            android:id="@+id/signUpEmailEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -90,12 +90,12 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:fontFamily="@font/montserrat_alternates_extralight"
             android:hint="Email"
             android:inputType="textPersonName"
             android:textColorHint="@color/white" />
 
         <EditText
+            android:id="@+id/signUpIDEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -103,12 +103,12 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:fontFamily="@font/montserrat_alternates_extralight"
             android:hint="Teacher Id"
             android:inputType="textPersonName"
             android:textColorHint="@color/white" />
 
         <EditText
+            android:id="@+id/signUpPasswordEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -116,13 +116,13 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:fontFamily="@font/montserrat_alternates_extralight"
             android:hint="Password"
             android:inputType="textPersonName"
             android:textColorHint="@color/white"
             />
 
         <EditText
+            android:id="@+id/signUpConfirmPasswordEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -130,7 +130,6 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:fontFamily="@font/montserrat_alternates_extralight"
             android:hint="Confirm Password"
             android:inputType="textPersonName"
             android:textColorHint="@color/white" />
@@ -138,6 +137,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/signUpSignUpButton"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -154,7 +154,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:fontFamily="@font/montserrat_alternates"
         android:text="Already have an Account ? Sign In"
         android:textColor="@color/white"
         android:clickable="true"
