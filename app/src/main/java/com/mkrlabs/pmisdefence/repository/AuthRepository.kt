@@ -29,6 +29,21 @@ class AuthRepository @Inject constructor(val mAuth: FirebaseAuth, val  firebaseF
         }
 
     }
+    suspend fun loginUserWithEmailAndPassword(email:String, password :String): Resource<FirebaseUser> {
+        try {
+            val result =  mAuth.signInWithEmailAndPassword(email,password).await()
+          return  Resource.Success(result.user!!)
+
+
+        }catch (e :Exception){
+            e.printStackTrace()
+            return Resource.Error(e.localizedMessage,null)
+
+        }
+
+    }
+
+
 
 
     suspend fun saveUserAccount(teacher: Teacher)  = firebaseFirestore.collection(Constant.USER_NODE).document(teacher.uid).set(teacher).await()

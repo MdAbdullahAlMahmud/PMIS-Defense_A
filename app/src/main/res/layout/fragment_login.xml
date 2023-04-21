@@ -22,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="76dp"
-        android:fontFamily="@font/rock_salt"
         android:text="@string/app_name"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,6 +66,7 @@
 
 
         <EditText
+            android:id="@+id/loginEmailEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -74,14 +74,17 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:fontFamily="@font/montserrat_alternates_extralight"
             android:hint="Email"
             android:inputType="textPersonName"
-            android:textColorHint="@color/white" />
+            android:textColor="@color/white"
+            android:textColorHint="@color/textColorHint"
+
+            />
 
 
 
         <EditText
+            android:id="@+id/loginPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -89,16 +92,30 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:fontFamily="@font/montserrat_alternates_extralight"
             android:hint="Password"
             android:inputType="textPersonName"
-            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:textColorHint="@color/textColorHint"
             />
+
+
+
+
+
+        <ProgressBar
+            android:id="@+id/loginProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/primaryColor"
+            android:visibility="gone"/>
 
 
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="36dp"
@@ -116,7 +133,6 @@
         android:layout_marginBottom="16dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:fontFamily="@font/montserrat_alternates_light"
         android:padding="10dp"
         android:text="Don't have an Account ? Sign Up"
         android:textColor="@color/white"
@@ -129,7 +145,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:fontFamily="@font/montserrat_alternates_light"
         android:text="forgot password"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"

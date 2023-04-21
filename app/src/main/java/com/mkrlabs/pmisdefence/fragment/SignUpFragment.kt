@@ -131,6 +131,8 @@ class SignUpFragment : Fragment() {
                 is  Resource.Success->{
                     hideLoading(view.context)
                     response.data?.let { result ->
+
+                        findNavController().navigate(R.id.action_signUpFragment_to_homeFragment)
                         CommonFunction.successToast(view.context,"Saved user data successfully")
                     }
                 }

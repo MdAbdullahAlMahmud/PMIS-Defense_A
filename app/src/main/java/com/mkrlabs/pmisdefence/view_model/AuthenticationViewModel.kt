@@ -15,6 +15,7 @@ import javax.inject.Inject
 class AuthenticationViewModel @Inject constructor (val authRepository: AuthRepository) : ViewModel() {
 
     val authState : MutableLiveData<Resource<FirebaseUser>> = MutableLiveData()
+    val loginState : MutableLiveData<Resource<FirebaseUser>> = MutableLiveData()
 
     val savedUserData : MutableLiveData<Resource<String>> = MutableLiveData()
 
@@ -30,6 +31,20 @@ class AuthenticationViewModel @Inject constructor (val authRepository: AuthRepos
                 saveUserData(teacher)
             }else{
                 authState.postValue(Resource.Error("Something went wrong"))
+            }
+        }
+
+    }
+
+
+    fun  loginUser(email:String, password :String){
+        loginState.postValue(Resource.Loading())
+        viewModelScope.launch {
+            val firebaseUser =  authRepository.loginUserWithEmailAndPassword(email,password).data
+            if (firebaseUser!=null){
+                loginState.postValue(Resource.Success(firebaseUser))
+            }else{
+                loginState.postValue(Resource.Error("Something went wrong"))
             }
         }
 
