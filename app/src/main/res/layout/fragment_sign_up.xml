@@ -77,9 +77,9 @@
             android:ems="10"
             android:hint="Name"
             android:inputType="textPersonName"
-            android:textColorHint="@color/white"
+            android:textColor="@color/white"
 
-            />
+            android:textColorHint="@color/textColorHint" />
 
         <EditText
             android:id="@+id/signUpEmailEdt"
@@ -92,7 +92,8 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textPersonName"
-            android:textColorHint="@color/white" />
+            android:textColor="@color/white"
+            android:textColorHint="@color/textColorHint" />
 
         <EditText
             android:id="@+id/signUpIDEdt"
@@ -105,7 +106,8 @@
             android:ems="10"
             android:hint="Teacher Id"
             android:inputType="textPersonName"
-            android:textColorHint="@color/white" />
+            android:textColor="@color/white"
+            android:textColorHint="@color/textColorHint" />
 
         <EditText
             android:id="@+id/signUpPasswordEdt"
@@ -118,8 +120,8 @@
             android:ems="10"
             android:hint="Password"
             android:inputType="textPersonName"
-            android:textColorHint="@color/white"
-            />
+            android:textColor="@color/white"
+            android:textColorHint="@color/textColorHint" />
 
         <EditText
             android:id="@+id/signUpConfirmPasswordEdt"
@@ -132,7 +134,17 @@
             android:ems="10"
             android:hint="Confirm Password"
             android:inputType="textPersonName"
-            android:textColorHint="@color/white" />
+            android:textColor="@color/white"
+            android:textColorHint="@color/textColorHint" />
+
+        <ProgressBar
+            android:id="@+id/signUpProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/primaryColor"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

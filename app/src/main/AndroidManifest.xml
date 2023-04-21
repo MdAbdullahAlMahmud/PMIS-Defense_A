@@ -12,6 +12,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:name=".PMISApplication"
         android:theme="@style/Theme.PmisDefence"
         tools:targetApi="31">
 
@@ -25,12 +26,6 @@
             </intent-filter>
         </activity>
 
-
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-
-        </activity>
 
         <meta-data
             android:name="preloaded_fonts"

@@ -1,7 +1,7 @@
 package com.mkrlabs.pmisdefence.model
 
 
- class Teacher
+  class Teacher
     (
     name:String,
     email :String,
