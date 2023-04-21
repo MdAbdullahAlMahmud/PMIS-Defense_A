@@ -74,6 +74,9 @@ class LoginFragment : Fragment() {
 
         }
 
+        /**
+         * Login State Observe
+         */
 
         authViewModel.loginState.observe(viewLifecycleOwner, Observer { response->
 
