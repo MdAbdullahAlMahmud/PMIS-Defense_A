@@ -36,5 +36,17 @@ class HomeFragment : Fragment() {
             mAuth.signOut()
             findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
+
+
+        binding.addNewTeamHome.setOnClickListener{
+
+            findNavController().navigate(R.id.action_homeFragment_to_projectInformationFragment)
+        }
+
+
+
+
+
+
     }
 }

@@ -19,9 +19,6 @@
             android:id="@+id/action_splashFragment_to_teacherTaskAddFragment"
             app:destination="@id/teacherTaskAddFragment" />
         <action
-            android:id="@+id/action_splashFragment_to_teacherAddMemberFragment"
-            app:destination="@id/teacherAddMemberFragment" />
-        <action
             android:id="@+id/action_splashFragment_to_projectDetailsFragment"
             app:destination="@id/projectDetailsFragment" />
         <action
@@ -43,6 +40,9 @@
             app:destination="@id/loginFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_projectInformationFragment"
+            app:destination="@id/projectInformationFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -105,4 +105,13 @@
         android:name="com.mkrlabs.pmisdefence.fragment.project_details_tab.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/projectInformationFragment"
+        android:name="com.mkrlabs.pmisdefence.fragment.teacher.ProjectInformationFragment"
+        android:label="fragment_project_information"
+        tools:layout="@layout/fragment_project_information" >
+        <action
+            android:id="@+id/action_projectInformationFragment_to_teacherAddMemberFragment"
+            app:destination="@id/teacherAddMemberFragment" />
+    </fragment>
 </navigation>
