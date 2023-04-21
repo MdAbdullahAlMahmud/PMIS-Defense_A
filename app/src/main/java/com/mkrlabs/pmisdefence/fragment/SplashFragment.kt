@@ -8,17 +8,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mkrlabs.pmisdefence.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
 
-
-    lateinit var  mAuth :FirebaseAuth
-
+    @Inject lateinit var  mAuth :FirebaseAuth
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mAuth = FirebaseAuth.getInstance()
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
@@ -35,7 +36,7 @@ class SplashFragment : Fragment() {
         delay(3000)
 
         if(mAuth.currentUser!=null){
-            findNavController().navigate(R.id.action_splashFragment_to_chatFragment)
+            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         }else{
             findNavController().navigate(R.id.action_splashFragment_to_signUpFragment)
         }

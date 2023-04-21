@@ -6,13 +6,12 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.databinding.ActivityHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
-
-
     lateinit var activityHomeBinding: ActivityHomeBinding
     lateinit var navController: NavController
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

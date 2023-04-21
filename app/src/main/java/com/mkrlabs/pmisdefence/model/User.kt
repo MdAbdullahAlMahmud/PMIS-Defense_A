@@ -5,5 +5,5 @@ package com.mkrlabs.pmisdefence.model
      val email :String,
      val  password:String,
      val id :String,
-     val uid:String
+     var uid:String
     )
