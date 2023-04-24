@@ -15,6 +15,8 @@ import com.mkrlabs.pmisdefence.fragment.project_details_tab.TaskTabFragment
 
 
 class ProjectDetailsFragment : Fragment() {
+
+
     lateinit var binding: FragmentPrjecetDetailsBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
