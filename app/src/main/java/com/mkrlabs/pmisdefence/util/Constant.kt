@@ -6,4 +6,7 @@ object Constant {
 
     const val USER_NODE = "users"
 
+
+    const val  PROJECT_NODE = "project"
+
 }

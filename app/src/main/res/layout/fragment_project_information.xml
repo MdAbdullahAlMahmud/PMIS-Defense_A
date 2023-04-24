@@ -17,7 +17,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_alternates"
             android:text="Project Information"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -28,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageButton"
+            android:id="@+id/projectInformationBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -44,13 +43,12 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/createProjectProjectName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:background="@drawable/edit_text_border_shape"
-        android:fontFamily="@font/montserrat_alternates"
-        android:hint="@string/hintTeamName"
+        android:hint="@string/hintProjectName"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,13 +61,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:alpha=".8"
-        android:fontFamily="@font/montserrat_alternates"
         android:text="Project Type"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/createProjectProjectName" />
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/createProjectProjectTypeGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -105,17 +102,16 @@
     </RadioGroup>
 
     <EditText
-        android:id="@+id/projectId"
+        android:id="@+id/createProjectProjectId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:background="@drawable/edit_text_border_shape"
-        android:fontFamily="@font/montserrat_alternates"
         android:hint="@string/hintprojectId"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/createProjectProjectTypeGroup" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/projectInformationNextButton"
