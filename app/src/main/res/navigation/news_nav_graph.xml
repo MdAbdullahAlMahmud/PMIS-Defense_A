@@ -9,7 +9,8 @@
         android:id="@+id/splashFragment"
         android:name="com.mkrlabs.pmisdefence.fragment.SplashFragment"
         android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" >
+        tools:layout="@layout/fragment_splash"
+        >
         <action
             android:id="@+id/action_splashFragment_to_signUpFragment"
             app:destination="@id/signUpFragment"
@@ -18,12 +19,6 @@
         <action
             android:id="@+id/action_splashFragment_to_teacherTaskAddFragment"
             app:destination="@id/teacherTaskAddFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_projectDetailsFragment"
-            app:destination="@id/projectDetailsFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
         <action
             android:id="@+id/action_splashFragment_to_homeFragment"
             app:destination="@id/homeFragment"
@@ -43,6 +38,9 @@
         <action
             android:id="@+id/action_homeFragment_to_projectInformationFragment"
             app:destination="@id/projectInformationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_projectDetailsFragment"
+            app:destination="@id/projectDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -80,7 +78,12 @@
         android:id="@+id/teacherAddMemberFragment"
         android:name="com.mkrlabs.pmisdefence.fragment.teacher.TeacherAddMemberFragment"
         android:label="fragment_teacher_add_member"
-        tools:layout="@layout/fragment_teacher_add_member" />
+        tools:layout="@layout/fragment_teacher_add_member" >
+
+       <argument
+           android:name="project"
+           app:argType="com.mkrlabs.pmisdefence.model.Project"/>
+    </fragment>
     <fragment
         android:id="@+id/teacherTaskAddFragment"
         android:name="com.mkrlabs.pmisdefence.fragment.teacher.TeacherTaskAddFragment"

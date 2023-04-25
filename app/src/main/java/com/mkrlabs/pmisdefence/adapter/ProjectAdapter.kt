@@ -1,0 +1,66 @@
+package com.mkrlabs.pmisdefence.adapter
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.mkrlabs.pmisdefence.databinding.TeamItemBinding
+import com.mkrlabs.pmisdefence.model.Project
+
+class ProjectAdapter : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
+
+        return  ProjectViewHolder(TeamItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+    }
+
+    override fun getItemCount(): Int {
+        return  differ.currentList.size
+    }
+
+    override fun onBindViewHolder(holder: ProjectViewHolder, position: Int) {
+
+        var project = differ.currentList.get(position)
+
+        holder.itemView.apply {
+           // Glide.with(context).load(article.urlToImage).into(holder.binding.ivArticleImage)
+            holder.binding.teamProjectName.text = project.projectName
+            holder.binding.teamProjectType.text = project.projectType
+
+        }
+
+        holder.binding.teamItemCV.setOnClickListener {
+            onProjectsItemClickListener?.let {
+                it(project)
+            }
+        }
+
+
+    }
+
+    private  var onProjectsItemClickListener :((Project)->Unit)? = null
+
+    fun setOnProjectItemClickListener(listener : (Project)->Unit){
+        onProjectsItemClickListener = listener
+    }
+
+
+
+    private  val  differCallback =object: DiffUtil.ItemCallback<Project>(){
+
+        override fun areItemsTheSame(oldItem: Project, newItem: Project): Boolean {
+            return  oldItem.projectUID == newItem.projectUID
+        }
+
+        override fun areContentsTheSame(oldItem: Project, newItem: Project): Boolean {
+            return  oldItem == newItem
+        }
+    }
+
+    val differ  = AsyncListDiffer(this,differCallback)
+
+
+    inner  class  ProjectViewHolder(val binding: TeamItemBinding) : RecyclerView.ViewHolder(binding.root)
+
+}
