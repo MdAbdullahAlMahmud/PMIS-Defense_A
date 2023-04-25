@@ -1,20 +1,14 @@
 package com.mkrlabs.pmisdefence.model
 
-
-//Project Id
-//Project Type
-//Project Name
-//Project  Description
-//Project Motivation
-//Project Objective
-//Project Field
-
+import java.io.Serializable
 
 data class Project(
-    var projectUID :String,
-    var projectType : Int,
-    var projectName :String,
-    var projectDescription :String,
-    var projectMotivation :String,
-    var projectObjective :String,
-    )
+    var projectUID :String = "",
+    var projectID :String = "",
+    var projectType : String= "",
+    var projectName :String= "",
+    var projectDescription :String= "",
+    var projectMotivation :String= "",
+    var projectObjective :String= "",
+    var teacher_id :String= ""
+    ):Serializable

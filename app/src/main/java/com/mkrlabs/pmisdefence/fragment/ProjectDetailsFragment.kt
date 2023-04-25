@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.adapter.MyPagerAdapter
@@ -39,5 +40,9 @@ class ProjectDetailsFragment : Fragment() {
         TabLayoutMediator(binding.tabLayout, binding.tabViewPager) { tab, position ->
             tab.text = adapter.getPageTitle(position)
         }.attach()
+
+        binding.projectDetailsBackButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 }

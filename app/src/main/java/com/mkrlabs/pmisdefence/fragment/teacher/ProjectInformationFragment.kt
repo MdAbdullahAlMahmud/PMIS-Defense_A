@@ -2,23 +2,31 @@ package com.mkrlabs.pmisdefence.fragment.teacher
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import android.widget.RadioButton
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.databinding.FragmentProjectInformationBinding
+import com.mkrlabs.pmisdefence.model.Project
 import com.mkrlabs.pmisdefence.util.CommonFunction
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.mkrlabs.pmisdefence.util.Resource
+import com.mkrlabs.pmisdefence.view_model.ProjectViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class ProjectInformationFragment : Fragment() {
 
 
     lateinit var binding: FragmentProjectInformationBinding
 
+    lateinit var projectViewModel :ProjectViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,6 +39,7 @@ class ProjectInformationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        projectViewModel = ViewModelProvider(this)[ProjectViewModel::class.java]
 
 
         binding.projectInformationNextButton.setOnClickListener{
@@ -69,19 +78,88 @@ class ProjectInformationFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            CommonFunction.successToast(view.context,"All are okay")
+            val selectedRadioButton = view.findViewById<RadioButton>( binding.createProjectProjectTypeGroup.checkedRadioButtonId)
+            val type: String = selectedRadioButton.text.toString()
+            val project = Project("",projectId,type,projectName,"","","","")
+
+           /* projectViewModel.createProject(project)
+
+            projectViewModel.createProjectState.observe(viewLifecycleOwner, Observer { response ->
+
+                when(response){
+
+                    is Resource.Success->{
+                        hideLoading()
+                        response.data?.let {
+                            CommonFunction.successToast(view.context,it)
+                        }
+
+                    }
+
+                    is Resource.Loading->{
+                        showLoading()
+
+                    }
+
+                    is Resource.Error->{
+                        hideLoading()
+                        CommonFunction.successToast(view.context,"Something went wrong")
+                    }
+                }
 
 
 
 
+            })*/
 
+
+            projectViewModel.createProjectV3(project)
+            projectViewModel.createProjectStateV3.observe(viewLifecycleOwner, Observer { response ->
+
+                when(response){
+
+                    is Resource.Success->{
+                        hideLoading()
+                        response.data?.let {
+                            CommonFunction.successToast(view.context,it.first.projectUID)
+
+                            val project = it.first
+                            val bundle = Bundle().apply {
+                                putSerializable("project",project)
+                            }
+                            Log.v("Project", "Project Pojo ->  ${project.toString()}")
+                            findNavController().navigate(R.id.action_projectInformationFragment_to_teacherAddMemberFragment,bundle)
+                        }
+
+                    }
+
+                    is Resource.Loading->{
+                        showLoading()
+
+                    }
+
+                    is Resource.Error->{
+                        hideLoading()
+                        CommonFunction.successToast(view.context,response.message.toString())
+                    }
+                }
+
+
+
+
+            })
 
         }
 
 
+    }
 
 
+    fun hideLoading(){
+        binding.projectInformationProgressBar.visibility= View.GONE
+    }
 
-
+    fun showLoading(){
+        binding.projectInformationProgressBar.visibility= View.VISIBLE
     }
 }
