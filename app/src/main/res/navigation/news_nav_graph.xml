@@ -86,14 +86,21 @@
     </fragment>
     <fragment
         android:id="@+id/teacherTaskAddFragment"
-        android:name="com.mkrlabs.pmisdefence.fragment.teacher.TeacherTaskAddFragment"
+        android:name="com.mkrlabs.pmisdefence.fragment.project_details_tab.TeacherTaskAddFragment"
         android:label="fragment_teacher_task_add"
         tools:layout="@layout/fragment_teacher_task_add" />
     <fragment
         android:id="@+id/projectDetailsFragment"
         android:name="com.mkrlabs.pmisdefence.fragment.ProjectDetailsFragment"
         android:label="fragment_prjecet_details"
-        tools:layout="@layout/fragment_prjecet_details" />
+        tools:layout="@layout/fragment_prjecet_details" >
+
+
+        <argument
+            android:name="project"
+            app:argType="com.mkrlabs.pmisdefence.model.Project"/>
+
+    </fragment>
     <fragment
         android:id="@+id/chatTabFragment"
         android:name="com.mkrlabs.pmisdefence.fragment.project_details_tab.ChatTabFragment"

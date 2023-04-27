@@ -64,7 +64,6 @@ class HomeFragment : Fragment() {
                 is Resource.Success->{
                     hideLoading()
                     response.data?.let {
-                        CommonFunction.successToast(view.context,it.size.toString())
                         projectAdapter.differ.submitList(it)
                     }
                 }
@@ -79,10 +78,17 @@ class HomeFragment : Fragment() {
         })
 
         projectAdapter.setOnProjectItemClickListener { project ->
-
-        findNavController().navigate(R.id.action_homeFragment_to_projectDetailsFragment)
+            val projectIntent = project
+            val bundle = Bundle().apply {
+                putSerializable("project",projectIntent)
+            }
+        findNavController().navigate(R.id.action_homeFragment_to_projectDetailsFragment,bundle)
 
         }
+
+
+
+
 
 
 

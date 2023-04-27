@@ -113,8 +113,8 @@ class ProjectInformationFragment : Fragment() {
             })*/
 
 
-            projectViewModel.createProjectV3(project)
-            projectViewModel.createProjectStateV3.observe(viewLifecycleOwner, Observer { response ->
+            projectViewModel.createProject(project)
+            projectViewModel.createProjectState.observe(viewLifecycleOwner, Observer { response ->
 
                 when(response){
 

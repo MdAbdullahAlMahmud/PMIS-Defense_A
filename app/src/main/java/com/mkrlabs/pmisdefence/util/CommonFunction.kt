@@ -11,6 +11,10 @@ object CommonFunction {
         Toasty.success(context,msg,Toasty.LENGTH_SHORT,true).show()
     }
 
+     fun infoToast(context: Context ,msg : String){
+        Toasty.info(context,msg,Toasty.LENGTH_SHORT,true).show()
+    }
+
     fun errorToast(context: Context ,msg : String){
         Toasty.error(context,msg,Toasty.LENGTH_SHORT,true).show()
     }

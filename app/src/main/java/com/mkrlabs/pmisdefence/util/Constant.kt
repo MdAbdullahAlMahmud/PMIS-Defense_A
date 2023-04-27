@@ -8,5 +8,6 @@ object Constant {
 
 
     const val  PROJECT_NODE = "project"
+    const val  TASK_NODE = "tasks"
 
 }
