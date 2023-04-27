@@ -1,15 +1,13 @@
 package com.mkrlabs.pmisdefence.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.mkrlabs.pmisdefence.model.Project
+import com.mkrlabs.pmisdefence.model.TaskItem
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ProjectRepository @Inject constructor(
@@ -18,39 +16,9 @@ class ProjectRepository @Inject constructor(
 ) {
 
 
-    /* suspend fun  createProject(project: Project) :Resource<Pair<String,Boolean>>{
-
-         val response = MutableLiveData<Resource<Pair<String,Boolean>>>()
-
-         val uniqueProjectUID = firebaseFirestore.collection(Constant.PROJECT_NODE).document().id
-
-         project.projectUID = uniqueProjectUID
-
-       firebaseFirestore.collection(Constant.PROJECT_NODE).document(uniqueProjectUID).set(project).addOnCompleteListener {
-
-           if (it.isSuccessful){
-               response.postValue(Resource.Success(Pair("Create project successfully",true)))
-           }else{
-               response.postValue(Resource.Error(it.exception?.localizedMessage.toString()))
-
-           }
-        }
 
 
-
-     }*/
-
-
-    suspend fun createProjectV2(project: Project): Task<Void> {
-
-        val uniqueProjectUID = firebaseFirestore.collection(Constant.PROJECT_NODE).document().id
-        project.projectUID = uniqueProjectUID
-
-        return firebaseFirestore.collection(Constant.PROJECT_NODE).document(uniqueProjectUID)
-            .set(project)
-    }
-
-    suspend fun createProjectV3(
+    suspend fun createProject(
         project: Project,
         result: (Resource<Pair<Project, String>>) -> Unit
     ) {
@@ -106,5 +74,61 @@ class ProjectRepository @Inject constructor(
 
     }
 
+
+    suspend fun  addTaskToProject(projectId : String , task: TaskItem,
+                                  result: (Resource<String>) -> Unit
+    ){
+        val taskUniqueId = firebaseFirestore.collection(Constant.PROJECT_NODE).document(projectId).collection(Constant.TASK_NODE).document().id
+
+        task.id = taskUniqueId
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.TASK_NODE)
+            .document(taskUniqueId)
+            .set(task).addOnSuccessListener {
+                result.invoke(
+                    Resource.Success("Task Added Successfully")
+                )
+            }.addOnFailureListener {
+            result.invoke(
+                Resource.Error(it.localizedMessage.toString())
+            )
+
+            }
+
+
+    }
+
+    suspend fun getAllTaskListOfAProject(
+        projectId:String,
+        result: (Resource<List<TaskItem>>) ->Unit
+    ){
+
+
+
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.TASK_NODE)
+            .orderBy("timestamp",Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener {
+                val taskItems = arrayListOf<TaskItem>()
+                for (document in it) {
+                    val taskItem = document.toObject(TaskItem::class.java)
+                    taskItems.add(taskItem)
+                }
+                result.invoke(
+                    Resource.Success(taskItems)
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    Resource.Error(
+                        it.localizedMessage
+                    )
+                )
+            }
+
+    }
 
 }
