@@ -21,6 +21,7 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
     var taskItemList : MutableLiveData<Resource<List<TaskItem>>> = MutableLiveData()
     var createTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
     var deleteTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
+    var editTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
 
 
 
@@ -53,6 +54,16 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
         viewModelScope.launch {
             repository.deleteTaskFromProject(projectId,taskItem.id){
                 deleteTaskItemState.postValue(it)
+            }
+        }
+
+    }
+    fun  editTask(projectId : String ,taskItem: TaskItem){
+        editTaskItemState.postValue(Resource.Loading())
+
+        viewModelScope.launch {
+            repository.editTaskFromProject(projectId,taskItem){
+                editTaskItemState.postValue(it)
             }
         }
 

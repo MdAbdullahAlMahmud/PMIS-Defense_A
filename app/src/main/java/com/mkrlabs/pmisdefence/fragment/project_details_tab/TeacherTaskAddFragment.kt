@@ -30,15 +30,16 @@ import com.mkrlabs.pmisdefence.view_model.ProjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 import javax.inject.Inject
-
 @AndroidEntryPoint
 class TeacherTaskAddFragment (val  projectId :String): Fragment() {
 
-    lateinit var binding: FragmentTeacherTaskAddBinding
+    lateinit var binding : FragmentTeacherTaskAddBinding
     lateinit var taskBinding : CreateTaskBottomSheetBinding
 
     lateinit var  projectViewModel: ProjectViewModel
     lateinit var  taskAdapter: TaskAdapter
+
+    lateinit var  bottomSheetDialog: BottomSheetDialog
 
 
     override fun onCreateView(
@@ -53,6 +54,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+        initBottomSheet(view)
 
         projectViewModel = ViewModelProvider(this)[ProjectViewModel::class.java]
 
@@ -61,21 +63,16 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
         binding.teacherTabaddTaskButton.setOnClickListener {
 
 
-            val inflater = LayoutInflater.from(requireContext())
-              taskBinding = CreateTaskBottomSheetBinding.inflate(inflater)
 
-            val dialog = BottomSheetDialog(view.context)
 
-            dialog.setContentView(taskBinding.root)
-
-            dialog.show()
+            bottomSheetDialog.show()
 
 
             taskBinding.createTaskAddTaskButton.setOnClickListener {
 
                  val taskDescription = taskBinding.createTaskTaskDescriptionEdt.text.toString()
                  if (taskDescription.isEmpty()){
-                     taskBinding.createTaskTaskDescriptionEdt.error = "requires"
+                     taskBinding.createTaskTaskDescriptionEdt.error = "required"
                      return@setOnClickListener
                  }
                 val  taskItem = TaskItem(taskDescription,"",Date().time,false)
@@ -93,7 +90,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                         hideLoading()
                         response.data?.let {
                             CommonFunction.successToast(view.context,it)
-                            dialog.dismiss()
+                            bottomSheetDialog.dismiss()
                             fetchTaskList()
                         }
                     }
@@ -103,7 +100,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                     }
                     is Resource.Error->{
                         hideLoading()
-                        dialog.dismiss()
+                        bottomSheetDialog.dismiss()
                         CommonFunction.successToast(view.context,response.message.toString())
                     }
                 }
@@ -115,7 +112,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
         fetchTaskList()
 
 
-        taskAdapter.setOnTaskMenuItemClickListener {view,taskItem->
+        taskAdapter.setOnTaskMenuItemClickListener { view, taskItem->
 
             val popupMenu = PopupMenu(context,view)
             popupMenu.menuInflater.inflate(R.menu.pop_up_menu,popupMenu.menu)
@@ -123,25 +120,71 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                 when(item.itemId) {
                     R.id.taskPopUpMenuEditIcon ->{
 
+                        editTaskItem(view.context,taskItem)
+
+
                     }
                     R.id.taskPopUpMenuDeleteIcon ->{
-
                         projectViewModel.deleteTask(projectId,taskItem)
-                        deleteTaskItem(view.context)
-
+                        deleteTaskItemListener(view.context)
                     }
 
                 }
                 true
             })
             popupMenu.show()
-
         }
-
     }
 
 
-    private fun deleteTaskItem(context: Context){
+    private fun  editTaskItem(context: Context,taskItem:TaskItem){
+        bottomSheetDialog.show()
+
+        taskBinding.createTaskTaskDescriptionEdt.setText(taskItem.description)
+
+        taskBinding.createTaskAddTaskButton.text= "Update"
+
+        taskBinding.createTaskAddTaskButton.setOnClickListener {
+
+
+            val taskDescription = taskBinding.createTaskTaskDescriptionEdt.text.toString()
+            if (taskDescription.isEmpty()){
+                taskBinding.createTaskTaskDescriptionEdt.error = "required"
+                return@setOnClickListener
+            }
+            val  taskItem = TaskItem(taskDescription,taskItem.id,Date().time,false)
+
+            projectViewModel.editTaskItemState.postValue(Resource.Loading())
+            projectViewModel.editTask(projectId,taskItem)
+
+        }
+
+        projectViewModel.editTaskItemState.observe(viewLifecycleOwner, Observer { response ->
+
+            when(response){
+                is Resource.Success->{
+                    response.data?.let {
+                        bottomSheetDialog.dismiss()
+                        fetchTaskList()
+                        CommonFunction.successToast(context,it)
+                    }
+                }
+
+                is Resource.Loading->{
+                }
+                is Resource.Error->{
+                    bottomSheetDialog.dismiss()
+                    CommonFunction.errorToast(context,response.message.toString())
+                }
+            }
+
+
+
+        })
+
+    }
+
+    private fun deleteTaskItemListener(context: Context){
         projectViewModel.deleteTaskItemState.postValue(Resource.Loading())
         projectViewModel.deleteTaskItemState.observe(viewLifecycleOwner, Observer {response->
 
@@ -184,6 +227,15 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
     private fun  init(){
         setupRecycleView()
     }
+    private fun initBottomSheet(view: View){
+        val inflater = LayoutInflater.from(requireContext())
+        taskBinding = CreateTaskBottomSheetBinding.inflate(inflater)
+
+        bottomSheetDialog = BottomSheetDialog(view.context)
+
+        bottomSheetDialog.setContentView(taskBinding.root)
+    }
+
 
     private fun fetchTaskList(){
         projectViewModel.taskItemList.postValue(Resource.Loading())
