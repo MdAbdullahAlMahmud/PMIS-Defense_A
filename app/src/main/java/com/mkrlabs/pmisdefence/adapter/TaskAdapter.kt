@@ -1,6 +1,7 @@
 package com.mkrlabs.pmisdefence.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -9,6 +10,7 @@ import com.mkrlabs.pmisdefence.databinding.TaskItemBinding
 import com.mkrlabs.pmisdefence.databinding.TeamItemBinding
 import com.mkrlabs.pmisdefence.model.Project
 import com.mkrlabs.pmisdefence.model.TaskItem
+import com.mkrlabs.pmisdefence.util.CommonFunction
 
 class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
@@ -31,18 +33,17 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
         }
 
-       /* holder.binding.teamItemCV.setOnClickListener {
-            onProjectsItemClickListener?.let {
-                it(project)
-            }
-        }*/
+        holder.binding.floatingMenuOnTaskItem.setOnClickListener {
+            onTaskMenuItemClickListener?.invoke(it,task)
+
+        }
 
 
     }
 
-    private  var onTaskMenuItemClickListener :((TaskItem)->Unit)? = null
+    private  var onTaskMenuItemClickListener :((View,TaskItem)->Unit)? = null
 
-    fun setOnTaskMenuItemClickListener(listener : (TaskItem)->Unit){
+    fun setOnTaskMenuItemClickListener(listener : (View, TaskItem)->Unit){
         onTaskMenuItemClickListener = listener
     }
 

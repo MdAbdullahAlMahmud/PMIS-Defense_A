@@ -1,7 +1,6 @@
 package com.mkrlabs.pmisdefence.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.adapter.ProjectAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentHomeBinding
-import com.mkrlabs.pmisdefence.databinding.FragmentLoginBinding
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Resource
 import com.mkrlabs.pmisdefence.view_model.ProjectViewModel

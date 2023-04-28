@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -111,10 +112,56 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
         }
 
 
-
-
         fetchTaskList()
 
+
+        taskAdapter.setOnTaskMenuItemClickListener {view,taskItem->
+
+            val popupMenu = PopupMenu(context,view)
+            popupMenu.menuInflater.inflate(R.menu.pop_up_menu,popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+                when(item.itemId) {
+                    R.id.taskPopUpMenuEditIcon ->{
+
+                    }
+                    R.id.taskPopUpMenuDeleteIcon ->{
+
+                        projectViewModel.deleteTask(projectId,taskItem)
+                        deleteTaskItem(view.context)
+
+                    }
+
+                }
+                true
+            })
+            popupMenu.show()
+
+        }
+
+    }
+
+
+    private fun deleteTaskItem(context: Context){
+        projectViewModel.deleteTaskItemState.postValue(Resource.Loading())
+        projectViewModel.deleteTaskItemState.observe(viewLifecycleOwner, Observer {response->
+
+            when(response){
+
+                is Resource.Success->{
+                    response.data?.let {
+                        fetchTaskList()
+                        CommonFunction.successToast(context,it)
+
+                    }
+                }
+
+                is Resource.Loading->{
+                }
+                is Resource.Error->{
+                    CommonFunction.successToast(context,response.message.toString())
+                }
+            }
+        })
     }
     fun hideLoading(){
         taskBinding.createTaskProgressBar.visibility= View.GONE
