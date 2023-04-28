@@ -112,6 +112,23 @@ class ProjectRepository @Inject constructor(
             }
     }
 
+     suspend fun editTaskFromProject(projectId: String,task: TaskItem, result: (Resource<String>) -> Unit){
+
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.TASK_NODE)
+            .document(task.id)
+            .set(task)
+            .addOnSuccessListener {
+                result.invoke(Resource.Success("Task Edit Successfully"))
+
+            }.addOnFailureListener {
+                result.invoke(Resource.Error(it.localizedMessage.toString()))
+            }
+    }
+
+
+
     suspend fun getAllTaskListOfAProject(
         projectId:String,
         result: (Resource<List<TaskItem>>) ->Unit
