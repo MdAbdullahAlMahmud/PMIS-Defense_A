@@ -8,6 +8,7 @@ import com.mkrlabs.pmisdefence.model.Project
 import com.mkrlabs.pmisdefence.model.TaskItem
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
+import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 class ProjectRepository @Inject constructor(
@@ -95,8 +96,20 @@ class ProjectRepository @Inject constructor(
             )
 
             }
+    }
 
 
+    suspend fun deleteTaskFromProject(projectId: String,taskId : String, result: (Resource<String>) -> Unit){
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.TASK_NODE)
+            .document(taskId)
+            .delete().addOnSuccessListener {
+                result.invoke(Resource.Success("Task Removed Successfully"))
+
+            }.addOnFailureListener {
+                result.invoke(Resource.Error(it.localizedMessage.toString()))
+            }
     }
 
     suspend fun getAllTaskListOfAProject(
