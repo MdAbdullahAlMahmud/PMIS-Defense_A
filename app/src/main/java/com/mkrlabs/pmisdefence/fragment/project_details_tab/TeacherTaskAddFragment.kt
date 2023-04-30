@@ -180,6 +180,8 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                 is Resource.Success->{
                     hideLoading()
                     response.data?.let {
+                        bottomSheetDialog.dismiss()
+
                         CommonFunction.successToast(view.context,it)
                         fetchTaskList()
                     }
@@ -202,6 +204,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                 is Resource.Success->{
                     hideLoading()
                     response.data?.let {
+                        bottomSheetDialog.dismiss()
                         CommonFunction.successToast(view.context,it)
                         fetchTaskList()
                     }
@@ -214,6 +217,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                     hideLoading()
                     CommonFunction.successToast(view.context,response.message.toString())
                 }
+
             }
         })
 
@@ -291,7 +295,6 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                 projectViewModel.createTaskItemState.postValue(Resource.Loading())
                 projectViewModel.createNewTask(projectId,upsertTaskItem)
             }
-            bottomSheetDialog.dismiss()
         }
     }
     private fun  editTaskItem(context: Context,taskItem:TaskItem){

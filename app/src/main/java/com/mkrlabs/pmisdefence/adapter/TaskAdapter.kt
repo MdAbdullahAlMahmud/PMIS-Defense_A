@@ -31,6 +31,10 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
             holder.binding.tasDescriptionItemTV.text = task.description
             holder.binding.tasDescriptionItemStatusCB.isChecked = task.status
 
+            CommonFunction.taskDateFormat(task.timestamp){
+                holder.binding.taskDeadLineItemTV.text = it
+            }
+
         }
 
         holder.binding.floatingMenuOnTaskItem.setOnClickListener {
