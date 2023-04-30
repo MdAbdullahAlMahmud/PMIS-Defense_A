@@ -161,4 +161,43 @@ class ProjectRepository @Inject constructor(
 
     }
 
+
+    suspend fun getAllTaskOverviewOfAProject(
+        projectId:String,
+        result: (Resource<Pair<Int,Int>>) ->Unit
+    ){
+
+
+
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.TASK_NODE)
+            .orderBy("timestamp",Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener {
+                val taskItems = arrayListOf<TaskItem>()
+                var countCompletedTask = 0
+                for (document in it) {
+                    val taskItem = document.toObject(TaskItem::class.java)
+
+                    if (taskItem.status)countCompletedTask++
+                    taskItems.add(taskItem)
+                }
+                result.invoke(
+                    Resource.Success(Pair(taskItems.size,countCompletedTask))
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    Resource.Error(
+                        it.localizedMessage
+                    )
+                )
+            }
+
+    }
+
+
+
+
 }

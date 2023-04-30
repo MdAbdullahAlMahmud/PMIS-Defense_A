@@ -11,6 +11,8 @@ import com.mkrlabs.pmisdefence.repository.ProjectRepository
 import com.mkrlabs.pmisdefence.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +24,7 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
     var createTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
     var deleteTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
     var editTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
+    var overviewTaskItemState : MutableLiveData<Resource<Pair<Int,Int>>> = MutableLiveData()
 
 
 
@@ -92,6 +95,26 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
         }
     }
 
+    fun  fetchOverviewTaskSize(projectId: String){
+        overviewTaskItemState.postValue(Resource.Loading())
+        viewModelScope.launch {
+                repository.getAllTaskOverviewOfAProject(projectId){
+                    overviewTaskItemState.postValue(it)
+                }
+
+
+        }
+    }
+
+
+
+
+
+    fun taskDateFormat(selectedDate: Date ,response : (String)->Unit){
+        val formatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+        val formattedDate = formatter.format(selectedDate)
+        response.invoke(formattedDate)
+    }
 
 
 }

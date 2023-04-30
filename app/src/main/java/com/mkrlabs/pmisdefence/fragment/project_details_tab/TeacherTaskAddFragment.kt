@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.adapter.ProjectAdapter
 import com.mkrlabs.pmisdefence.adapter.TaskAdapter
@@ -40,6 +41,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
     lateinit var  taskAdapter: TaskAdapter
 
     lateinit var  bottomSheetDialog: BottomSheetDialog
+    private lateinit var selectedDate: Date
 
 
     override fun onCreateView(
@@ -60,12 +62,33 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
 
 
 
-        binding.teacherTabaddTaskButton.setOnClickListener {
+       /* binding.teacherTabaddTaskButton.setOnClickListener {
 
 
 
 
             bottomSheetDialog.show()
+
+
+            selectedDate = Date()
+
+            taskBinding.createTaskDateCV.setOnClickListener {
+                val datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select date")
+                    .setSelection(selectedDate.time)
+                    .build()
+
+                datePicker.addOnPositiveButtonClickListener {
+                    selectedDate = Date(it)
+                    projectViewModel.createTaskDateFormat(selectedDate){
+                        taskBinding.taskDateTV.text = it
+                }
+                }
+
+                datePicker.show(childFragmentManager, "tag")
+
+            }
+
 
 
             taskBinding.createTaskAddTaskButton.setOnClickListener {
@@ -75,7 +98,12 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                      taskBinding.createTaskTaskDescriptionEdt.error = "required"
                      return@setOnClickListener
                  }
-                val  taskItem = TaskItem(taskDescription,"",Date().time,false)
+
+
+
+
+
+                val  taskItem = TaskItem(taskDescription,"",selectedDate.time,false)
                 projectViewModel.createTaskItemState.postValue(Resource.Loading())
                 projectViewModel.createNewTask(projectId,taskItem)
 
@@ -106,8 +134,11 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                 }
             })
 
-        }
+        }*/
 
+        binding.teacherTabaddTaskButton.setOnClickListener {
+            taskUpsert(false,TaskItem())
+        }
 
         fetchTaskList()
 
@@ -120,8 +151,9 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                 when(item.itemId) {
                     R.id.taskPopUpMenuEditIcon ->{
 
-                        editTaskItem(view.context,taskItem)
+                        //editTaskItem(view.context,taskItem)
 
+                        taskUpsert(true,taskItem)
 
                     }
                     R.id.taskPopUpMenuDeleteIcon ->{
@@ -134,9 +166,134 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
             })
             popupMenu.show()
         }
+
+        upsertListener(view)
+
     }
 
 
+    private fun upsertListener(view: View){
+        projectViewModel.createTaskItemState.observe(viewLifecycleOwner, Observer {response->
+
+            when(response){
+
+                is Resource.Success->{
+                    hideLoading()
+                    response.data?.let {
+                        CommonFunction.successToast(view.context,it)
+                        fetchTaskList()
+                    }
+                }
+
+                is Resource.Loading->{
+                    showLoading()
+                }
+                is Resource.Error->{
+                    hideLoading()
+                    CommonFunction.successToast(view.context,response.message.toString())
+                }
+            }
+        })
+
+        projectViewModel.editTaskItemState.observe(viewLifecycleOwner, Observer {response->
+
+            when(response){
+
+                is Resource.Success->{
+                    hideLoading()
+                    response.data?.let {
+                        CommonFunction.successToast(view.context,it)
+                        fetchTaskList()
+                    }
+                }
+
+                is Resource.Loading->{
+                    showLoading()
+                }
+                is Resource.Error->{
+                    hideLoading()
+                    CommonFunction.successToast(view.context,response.message.toString())
+                }
+            }
+        })
+
+
+
+
+
+
+    }
+    private fun taskUpsert(isEdit: Boolean,taskItem: TaskItem){
+
+        bottomSheetDialog.show()
+
+        if (isEdit){
+
+            taskBinding.createTaskAddTaskButton.text = "Update Task"
+            taskBinding.createTaskTaskDescriptionEdt.setText(taskItem.description)
+            selectedDate = Date(taskItem.timestamp)
+            projectViewModel.taskDateFormat(selectedDate){
+                taskBinding.taskDateTV.text=it
+            }
+
+        }else{
+            taskBinding.createTaskAddTaskButton.text = "Create Task"
+            taskBinding.createTaskTaskDescriptionEdt.setText(taskItem.description)
+            taskBinding.taskDateTV.text="Select Date"
+            selectedDate = Date()
+
+        }
+
+
+
+        taskBinding.createTaskDateCV.setOnClickListener {
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .setSelection(selectedDate.time)
+                .build()
+
+            datePicker.addOnPositiveButtonClickListener {
+                selectedDate = Date(it)
+                projectViewModel.taskDateFormat(selectedDate){
+                    taskBinding.taskDateTV.text = it
+                }
+            }
+
+            datePicker.show(childFragmentManager, "tag")
+
+        }
+
+
+
+        taskBinding.createTaskAddTaskButton.setOnClickListener {
+
+            val taskDescription = taskBinding.createTaskTaskDescriptionEdt.text.toString()
+            if (taskDescription.isEmpty()){
+                taskBinding.createTaskTaskDescriptionEdt.error = "required"
+                return@setOnClickListener
+            }
+
+
+
+            val upsertTaskItem = TaskItem()
+            upsertTaskItem.id=""
+            upsertTaskItem.description=taskDescription
+            upsertTaskItem.timestamp =selectedDate.time
+            upsertTaskItem.status = false
+
+            if (isEdit){
+                upsertTaskItem.id = taskItem.id
+                projectViewModel.editTaskItemState.postValue(Resource.Loading())
+                projectViewModel.editTask(projectId,upsertTaskItem)
+
+            }else{
+                //Insert
+                projectViewModel.createTaskItemState.postValue(Resource.Loading())
+                projectViewModel.createNewTask(projectId,upsertTaskItem)
+            }
+            bottomSheetDialog.dismiss()
+        }
+    }
     private fun  editTaskItem(context: Context,taskItem:TaskItem){
         bottomSheetDialog.show()
 
