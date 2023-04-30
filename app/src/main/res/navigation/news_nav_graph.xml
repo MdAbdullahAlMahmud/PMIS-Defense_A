@@ -99,6 +99,9 @@
         <argument
             android:name="project"
             app:argType="com.mkrlabs.pmisdefence.model.Project"/>
+        <action
+            android:id="@+id/action_projectDetailsFragment_to_chatTabFragment"
+            app:destination="@id/chatTabFragment" />
 
     </fragment>
     <fragment

@@ -27,7 +27,7 @@ class ChatTabFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.superVisorChatItem.setOnClickListener{
-            Toast.makeText(view.context,"Clicked",Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_chatTabFragment_to_chatFragment)
 
         }
 
