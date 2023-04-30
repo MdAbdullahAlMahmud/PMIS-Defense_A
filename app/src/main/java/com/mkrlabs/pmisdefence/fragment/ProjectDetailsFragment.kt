@@ -35,7 +35,7 @@ class ProjectDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = MyPagerAdapter(parentFragmentManager, lifecycle)
-        adapter.addFragment(OverviewTabFragment(), "Overview")
+        adapter.addFragment(OverviewTabFragment(project.project.projectUID), "Overview")
         adapter.addFragment(TeacherTaskAddFragment(project.project.projectUID), "Task")
         adapter.addFragment(ChatTabFragment(), "Chat")
 

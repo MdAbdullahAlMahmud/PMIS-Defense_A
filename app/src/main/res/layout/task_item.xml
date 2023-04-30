@@ -19,6 +19,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:gravity="center|start"
+            android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/floatingMenuOnTaskItem"
             app:layout_constraintStart_toEndOf="@+id/tasDescriptionItemStatusCB"
@@ -34,15 +36,28 @@
                 android:textSize="18sp"
 
                 />
-             <TextView
-                android:id="@+id/taskDeadLineItemTV"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="May 1 ,2023"
-                 android:visibility="gone"
-                android:textColor="@color/black"
-                 android:textSize="10dp"
-                />
+                android:orientation="horizontal"
+                android:gravity="start|center"
+                >
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/baseline_calendar_today_24" />
+                <TextView
+                    android:id="@+id/taskDeadLineItemTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="May 1 ,2023"
+                    android:visibility="visible"
+                    android:textColor="@color/black"
+                    android:textSize="10dp"
+                    android:layout_marginStart="8dp"
+                    />
+            </LinearLayout>
+
 
 
 
