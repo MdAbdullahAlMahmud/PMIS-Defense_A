@@ -17,9 +17,6 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_splashFragment_to_teacherTaskAddFragment"
-            app:destination="@id/teacherTaskAddFragment" />
-        <action
             android:id="@+id/action_splashFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/splashFragment"
@@ -102,6 +99,16 @@
         <action
             android:id="@+id/action_projectDetailsFragment_to_chatTabFragment"
             app:destination="@id/chatTabFragment" />
+        <action
+            android:id="@+id/action_projectDetailsFragment_to_overviewTabFragment"
+            app:destination="@id/overviewTabFragment" />
+        <action
+            android:id="@+id/action_projectDetailsFragment_to_teacherTaskAddFragment"
+            app:destination="@id/teacherTaskAddFragment" />
+        <action
+            android:id="@+id/action_projectDetailsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+
 
     </fragment>
     <fragment
@@ -117,7 +124,13 @@
         android:id="@+id/chatFragment"
         android:name="com.mkrlabs.pmisdefence.fragment.project_details_tab.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat" >
+
+        <argument
+            android:name="chatItem"
+            app:argType="com.mkrlabs.pmisdefence.model.ChatItem"/>
+
+    </fragment>
     <fragment
         android:id="@+id/projectInformationFragment"
         android:name="com.mkrlabs.pmisdefence.fragment.teacher.ProjectInformationFragment"
@@ -127,4 +140,9 @@
             android:id="@+id/action_projectInformationFragment_to_teacherAddMemberFragment"
             app:destination="@id/teacherAddMemberFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/overviewTabFragment"
+        android:name="com.mkrlabs.pmisdefence.fragment.project_details_tab.OverviewTabFragment"
+        android:label="fragment_overview_tab"
+        tools:layout="@layout/fragment_overview_tab" />
 </navigation>

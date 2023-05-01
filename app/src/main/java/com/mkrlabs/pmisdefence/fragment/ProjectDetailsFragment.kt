@@ -34,7 +34,7 @@ class ProjectDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = MyPagerAdapter(parentFragmentManager, lifecycle)
+        val adapter = MyPagerAdapter(childFragmentManager, lifecycle)
         adapter.addFragment(OverviewTabFragment(project.project.projectUID), "Overview")
         adapter.addFragment(TeacherTaskAddFragment(project.project.projectUID), "Task")
         adapter.addFragment(ChatTabFragment(), "Chat")

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.text.set
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.adapter.MessageAdapter
@@ -36,6 +37,9 @@ class ChatFragment : Fragment() {
 
     lateinit var chatViewModel: ChatViewModel
 
+    val  chatItem : ChatFragmentArgs by navArgs()
+    val hisUID = "0VaSwE3jJ6c6EKZ3DhAWYVinZat2"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,13 +51,18 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = MessageAdapter()
 
         initRecycleView(view.context)
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         chatMessageList = mutableListOf<Message>()
 
-        adapter = MessageAdapter()
+
+        CommonFunction.infoToast(view.context,"${chatItem.chatItem.uid}")
+
+        chatViewModel.messageListMine(hisUID)
+
         binding.sendButton.setOnClickListener {
 
 
@@ -71,7 +80,10 @@ class ChatFragment : Fragment() {
 
                 val userMessage = binding.messageInput.text.toString()
                 val chatMessage = ChatMessage(userMessage,"",CommonFunction.loggedInUserUID(),Date().time,MessageType.TEXT)
-                chatViewModel.sendMessage("a",chatMessage)
+                chatViewModel.sendMessage(hisUID,chatMessage)
+                binding.messageInput.setText("")
+                chatViewModel.mineMessageState.postValue(Resource.Loading())
+                chatViewModel.messageListMine(hisUID)
             }
         }
 
@@ -81,6 +93,7 @@ class ChatFragment : Fragment() {
 
             when(response){
                 is  Resource.Success ->{
+
 
                     var layoutType : LayoutType? = null
                     response.data?.let {
@@ -111,6 +124,48 @@ class ChatFragment : Fragment() {
 
 
         })
+        chatViewModel.mineMessageState.observe(viewLifecycleOwner, Observer {response->
+
+
+            when(response){
+                is  Resource.Success ->{
+
+                    var layoutType : LayoutType? = null
+                    response.data?.let {messageList->
+
+                       messageList.forEach {
+                           if (it.senderId.equals(CommonFunction.loggedInUserUID())){
+                               layoutType = LayoutType.SENDER
+                           }else{
+                               layoutType = LayoutType.RECEIVER
+                           }
+                           val responseMessage = Message(it.message,MessageType.TEXT, layoutType!!,it.timestamp,0)
+                           adapter.addMessage(responseMessage)
+                           binding.recyclerView.smoothScrollToPosition(adapter.itemCount)
+                       }
+
+
+
+                    }
+
+                }
+                is  Resource.Error ->{
+                    CommonFunction.errorToast(view.context,response.message.toString())
+
+                }
+                is  Resource.Loading->{
+
+                }
+            }
+
+
+
+
+
+        })
+
+
+
 
     }
 

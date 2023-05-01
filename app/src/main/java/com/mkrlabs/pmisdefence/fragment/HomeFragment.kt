@@ -56,6 +56,7 @@ class HomeFragment : Fragment() {
         }
 
 
+
         projectViewModel.fetchProjectList()
         projectViewModel.projectList.observe(viewLifecycleOwner, Observer { response->
             when(response){
@@ -81,6 +82,11 @@ class HomeFragment : Fragment() {
                 putSerializable("project",projectIntent)
             }
         findNavController().navigate(R.id.action_homeFragment_to_projectDetailsFragment,bundle)
+
+        }
+
+
+        projectAdapter.setOnGroupMessageClickListener {
 
         }
 

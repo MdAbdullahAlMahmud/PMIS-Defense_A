@@ -5,15 +5,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mkrlabs.pmisdefence.R
+import com.mkrlabs.pmisdefence.adapter.ChatAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentChatTabBinding
-import com.mkrlabs.pmisdefence.util.Constant
+import com.mkrlabs.pmisdefence.util.CommonFunction
+import com.mkrlabs.pmisdefence.util.Resource
+import com.mkrlabs.pmisdefence.view_model.ChatViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ChatTabFragment : Fragment() {
 
     lateinit var binding : FragmentChatTabBinding
+    lateinit var chatAdapter : ChatAdapter
+    lateinit var viewModel: ChatViewModel
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,14 +36,68 @@ class ChatTabFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        initRecycleView()
 
-        binding.superVisorChatItem.setOnClickListener{
-            findNavController().navigate(R.id.action_chatTabFragment_to_chatFragment)
+        viewModel.chatUserList()
+        viewModel.chatUserListState.observe(viewLifecycleOwner, Observer {response->
 
+            when(response){
+
+                is  Resource.Loading->{
+                    showLoading()
+                }
+                is  Resource.Success->{
+                    response.data?.let {
+                        chatAdapter.differ.submitList(it)
+                        hideLoading()
+                    }
+
+                }
+                is  Resource.Error->{
+
+                    CommonFunction.errorToast(view.context, response.message.toString())
+
+                }
+        }
+
+        })
+
+        chatAdapter.setOnChatItemClickListener{ view, chatItem ->
+
+            val chatIntent = chatItem
+            val bundle = Bundle().apply {
+                putSerializable("chatItem",chatIntent)
+            }
+            findNavController().navigate(R.id.action_projectDetailsFragment_to_chatFragment,bundle)
         }
 
 
     }
 
+
+    fun  showLoading(){
+        binding.chatProgressBar.visibility = View.VISIBLE
+    }
+
+    fun  hideLoading(){
+        binding.chatProgressBar.visibility = View.GONE
+    }
+
+
+
+    fun initRecycleView(){
+
+
+        chatAdapter = ChatAdapter()
+
+        binding.chatRV.apply {
+            adapter = chatAdapter
+            layoutManager = LinearLayoutManager(activity)
+        }
+
+
+
+    }
 
 }
