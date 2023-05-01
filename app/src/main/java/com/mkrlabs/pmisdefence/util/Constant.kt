@@ -9,5 +9,7 @@ object Constant {
 
     const val  PROJECT_NODE = "project"
     const val  TASK_NODE = "tasks"
+    const val  CHAT_NODE = "chats"
+    const val  MESSAGE_NODE = "messages"
 
 }

@@ -1,0 +1,68 @@
+package com.mkrlabs.pmisdefence.adapter
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.mkrlabs.pmisdefence.databinding.ChatItemBinding
+import com.mkrlabs.pmisdefence.databinding.TaskItemBinding
+import com.mkrlabs.pmisdefence.model.ChatItem
+import com.mkrlabs.pmisdefence.model.TaskItem
+import com.mkrlabs.pmisdefence.util.CommonFunction
+
+class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
+
+        return  ChatViewHolder(ChatItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+    }
+
+    override fun getItemCount(): Int {
+        return  differ.currentList.size
+    }
+
+    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
+
+        var chatItem = differ.currentList.get(position)
+
+        holder.itemView.apply {
+            holder.binding.chatUserNameTV.text = chatItem.name
+            holder.binding.chatUserNameRole.text = chatItem.role
+        }
+
+
+        holder.binding.chatItemCL.setOnClickListener {
+            onChatItemClickListener?.invoke(it,chatItem)
+
+        }
+
+
+    }
+
+    private  var onChatItemClickListener : ((View, ChatItem)->Unit)? = null
+
+    fun setOnChatItemClickListener(listener : (View, ChatItem)->Unit){
+        onChatItemClickListener = listener
+    }
+
+
+
+    private  val  differCallback =object: DiffUtil.ItemCallback<ChatItem>(){
+
+        override fun areItemsTheSame(oldItem: ChatItem, newItem: ChatItem): Boolean {
+            return  oldItem.uid == newItem.uid
+        }
+
+        override fun areContentsTheSame(oldItem: ChatItem, newItem: ChatItem): Boolean {
+            return  oldItem == newItem
+        }
+    }
+
+    val differ  = AsyncListDiffer(this,differCallback)
+
+
+    inner  class  ChatViewHolder(val binding: ChatItemBinding) : RecyclerView.ViewHolder(binding.root)
+
+}

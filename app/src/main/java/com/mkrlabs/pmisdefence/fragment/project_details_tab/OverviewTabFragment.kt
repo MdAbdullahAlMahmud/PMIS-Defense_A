@@ -53,7 +53,14 @@ class OverviewTabFragment(val projectId:String) : Fragment() {
                         binding.overViewTaskProgress.max= response.data.first
                         binding.overViewTaskProgress.progress = response.data.second
 
-                        val progressInProgress = (100* response.data.second)/response.data.first
+                        var progress = 0
+                        try {
+                            progress = (100* response.data.second)/response.data.first
+                        }catch (e :Exception){
+                            progress = 0
+                        }
+
+                        val progressInProgress = progress
                         binding.overviewProgressInPercentage.text = "${progressInProgress.toString()}%"
 
                     }
