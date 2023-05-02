@@ -7,30 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.text.set
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.adapter.MessageAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentChatBinding
-import com.mkrlabs.pmisdefence.databinding.FragmentOverviewTabBinding
-import com.mkrlabs.pmisdefence.model.ChatMessage
-import com.mkrlabs.pmisdefence.model.LayoutType
 import com.mkrlabs.pmisdefence.model.Message
 import com.mkrlabs.pmisdefence.model.MessageType
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Constant.MESSAGE_NODE
-import com.mkrlabs.pmisdefence.util.Resource
-import com.mkrlabs.pmisdefence.view_model.ChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 
@@ -39,7 +27,7 @@ class ChatFragment : Fragment() {
 
     lateinit var binding: FragmentChatBinding
 
-    lateinit var adapter :MessageAdapter
+    lateinit var messageAdapter :MessageAdapter
 
     lateinit var chatMessageList : ArrayList<Message>
 
@@ -67,7 +55,7 @@ class ChatFragment : Fragment() {
         database = FirebaseDatabase.getInstance().reference
 
         chatMessageList = ArrayList()
-        adapter = MessageAdapter(chatMessageList)
+        messageAdapter = MessageAdapter(chatMessageList)
         initRecycleView(view.context)
 
 
@@ -178,7 +166,7 @@ class ChatFragment : Fragment() {
     fun  initRecycleView(context: Context){
         binding.recyclerView.apply {
             layoutManager= LinearLayoutManager(context)
-            adapter = adapter
+            adapter =messageAdapter
             adapter?.let { smoothScrollToPosition(it.itemCount) }
         }
     }
