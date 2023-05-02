@@ -12,6 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.adapter.MessageAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentChatBinding
@@ -21,6 +27,8 @@ import com.mkrlabs.pmisdefence.model.LayoutType
 import com.mkrlabs.pmisdefence.model.Message
 import com.mkrlabs.pmisdefence.model.MessageType
 import com.mkrlabs.pmisdefence.util.CommonFunction
+import com.mkrlabs.pmisdefence.util.Constant
+import com.mkrlabs.pmisdefence.util.Constant.MESSAGE_NODE
 import com.mkrlabs.pmisdefence.util.Resource
 import com.mkrlabs.pmisdefence.view_model.ChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,12 +41,16 @@ class ChatFragment : Fragment() {
 
     lateinit var adapter :MessageAdapter
 
-    lateinit var chatMessageList : MutableList<Message>
+    lateinit var chatMessageList : ArrayList<Message>
 
-    lateinit var chatViewModel: ChatViewModel
+    lateinit var database : DatabaseReference
+
+
 
     val  chatItem : ChatFragmentArgs by navArgs()
-    val hisUID = "0VaSwE3jJ6c6EKZ3DhAWYVinZat2"
+
+    lateinit var CHAT_ROOM_MINE :String
+    lateinit var CHAT_ROOM_HIS :String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,17 +63,19 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = MessageAdapter()
+        init()
+        database = FirebaseDatabase.getInstance().reference
 
+        chatMessageList = ArrayList()
+        adapter = MessageAdapter(chatMessageList)
         initRecycleView(view.context)
-        chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
-
-        chatMessageList = mutableListOf<Message>()
 
 
-        CommonFunction.infoToast(view.context,"${chatItem.chatItem.uid}")
 
-        chatViewModel.messageListMine(hisUID)
+
+
+
+
 
         binding.sendButton.setOnClickListener {
 
@@ -70,107 +84,98 @@ class ChatFragment : Fragment() {
 
                 Toast.makeText(view.context,"Please write something !!", Toast.LENGTH_SHORT).show()
             }else{
-                /*val userMessage = Message(binding.messageInput.text.toString(),MessageType.TEXT,LayoutType.SENDER,12323L,0)
-                adapter.addMessage(userMessage)
 
-                val responseMessage = Message("I am getting your message",MessageType.TEXT,LayoutType.RECEIVER,12323L,0)
-                adapter.addMessage(responseMessage)
+                var messageText = binding.messageInput.text.toString()
+                val messageId = database.push().key.toString()
 
-                binding.messageInput.setText("")*/
+                var messageItem = Message(messageText,messageId,MessageType.TEXT,"",Date().time)
 
-                val userMessage = binding.messageInput.text.toString()
-                val chatMessage = ChatMessage(userMessage,"",CommonFunction.loggedInUserUID(),Date().time,MessageType.TEXT)
-                chatViewModel.sendMessage(hisUID,chatMessage)
-                binding.messageInput.setText("")
-                chatViewModel.mineMessageState.postValue(Resource.Loading())
-                chatViewModel.messageListMine(hisUID)
+                CommonFunction.infoToast(view.context,"Before Send Message")
+                sendMessage(view.context,messageItem)
+
             }
         }
 
 
-        chatViewModel.sendMessageState.observe(viewLifecycleOwner, Observer {response->
+/*
 
+        database.reference
+            .child(Constant.CHAT_NODE)
+            .child(CHAT_ROOM_MINE)
+            .child(MESSAGE_NODE)
+            .addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
 
-            when(response){
-                is  Resource.Success ->{
-
-
-                    var layoutType : LayoutType? = null
-                    response.data?.let {
-
-                        if (it.senderId.equals(CommonFunction.loggedInUserUID())){
-                            layoutType = LayoutType.SENDER
-                        }else{
-                            layoutType = LayoutType.RECEIVER
+                    chatMessageList.clear()
+                    for (data in snapshot.children){
+                        var message : Message? = data.getValue(Message::class.java)
+                        if (message != null) {
+                            chatMessageList.add(message)
                         }
-                        val responseMessage = Message(it.message,MessageType.TEXT, layoutType!!,it.timestamp,0)
-                        adapter.addMessage(responseMessage)
-                        binding.recyclerView.smoothScrollToPosition(adapter.itemCount)
-
                     }
-
+                    adapter.notifyDataSetChanged()
                 }
-                is  Resource.Error ->{
-                    CommonFunction.errorToast(view.context,response.message.toString())
-
+                override fun onCancelled(error: DatabaseError) {
+                    CommonFunction.errorToast(view.context,"Error ${error.message}")
                 }
-                is  Resource.Loading->{
 
-                }
-            }
+            })
 
 
+*/
 
-
-
-        })
-        chatViewModel.mineMessageState.observe(viewLifecycleOwner, Observer {response->
-
-
-            when(response){
-                is  Resource.Success ->{
-
-                    var layoutType : LayoutType? = null
-                    response.data?.let {messageList->
-
-                       messageList.forEach {
-                           if (it.senderId.equals(CommonFunction.loggedInUserUID())){
-                               layoutType = LayoutType.SENDER
-                           }else{
-                               layoutType = LayoutType.RECEIVER
-                           }
-                           val responseMessage = Message(it.message,MessageType.TEXT, layoutType!!,it.timestamp,0)
-                           adapter.addMessage(responseMessage)
-                           binding.recyclerView.smoothScrollToPosition(adapter.itemCount)
-                       }
-
-
-
-                    }
-
-                }
-                is  Resource.Error ->{
-                    CommonFunction.errorToast(view.context,response.message.toString())
-
-                }
-                is  Resource.Loading->{
-
-                }
-            }
-
-
-
-
-
-        })
 
 
 
 
     }
+    fun init(){
+        buildChatRoom()
+    }
 
+    fun sendMessage(context: Context,message: Message){
+
+        CommonFunction.infoToast(context,"OnSend Message")
+
+
+
+        database.child(Constant.CHAT_NODE)
+            .child(CHAT_ROOM_MINE)
+            .child(MESSAGE_NODE)
+            .child(message.messageId)
+            .setValue(message)
+            .addOnSuccessListener {
+                CommonFunction.successToast(context,"Mine Completed")
+
+                database.child(Constant.CHAT_NODE)
+                    .child(CHAT_ROOM_HIS)
+                    .child(MESSAGE_NODE)
+                    .child(message.messageId)
+                    .setValue(message)
+                    .addOnSuccessListener {
+                        CommonFunction.successToast(context,"His Completed")
+
+                        binding.messageInput.setText("")
+
+                    }.addOnFailureListener {
+                        CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
+                        it.printStackTrace()
+                    }
+
+            }.addOnFailureListener {
+                CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
+                it.printStackTrace()
+            }
+    }
+    private fun buildChatRoom(){
+
+        val mineUID = FirebaseAuth.getInstance().uid
+        val  hisUID = chatItem.chatItem.uid
+
+        CHAT_ROOM_MINE = "${mineUID}_${hisUID}"
+        CHAT_ROOM_HIS = "${hisUID}_${mineUID}"
+    }
     fun  initRecycleView(context: Context){
-        binding.recyclerView.adapter = adapter
         binding.recyclerView.apply {
             layoutManager= LinearLayoutManager(context)
             adapter = adapter
