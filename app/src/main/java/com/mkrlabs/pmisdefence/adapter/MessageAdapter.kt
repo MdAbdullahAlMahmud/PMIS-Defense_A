@@ -16,19 +16,12 @@ import com.mkrlabs.pmisdefence.model.Message
 import com.mkrlabs.pmisdefence.model.MessageType
 
 
-class MessageAdapter :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(val  messageList : List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val ITEM_SENT = 1
     val ITEM_RECEIVE = 2
-    private val messageList = mutableListOf<Message>()
 
 
 
-
-    fun addMessage(message: Message) {
-        messageList.add(message)
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -71,7 +64,7 @@ class MessageAdapter :
                     receiverViewHolder.receive_message_image_text.visibility = View.VISIBLE
                     receiverViewHolder.receive_message_image_text.setText(message.message)
                 }
-                receiverViewHolder.receive_message_image.setImageResource(message.image)
+               // receiverViewHolder.receive_message_image.setImageResource(message.image)
             } else {
                 receiverViewHolder.receiverMessageImageLayout.visibility = View.GONE
                 receiverViewHolder.receiverMessageTextLayout.visibility = View.VISIBLE
