@@ -9,15 +9,31 @@ val image :String*/
  class Message{
      var message :String =""
      var messageId :String =""
+     var senderId :String =""
      var messageType: MessageType? = null
-     val layoutType: LayoutType? =null
-     val timestamp: Long = 0L
-     val image :String? = ""
+     var layoutType: LayoutType? =null
+     var timestamp: Long = 0L
+     var image :String = ""
 
 
      constructor()
-     constructor( message : String,messageId :String, messageType: MessageType,image :String,timestamp : Long)
-     constructor( message : String,messageId :String, messageType: MessageType,image :String,timestamp : Long, layoutType: LayoutType)
+     constructor(senderId : String, message : String,messageId :String, messageType: MessageType,image :String,timestamp : Long){
+         this.senderId = senderId
+         this.message = message
+         this.messageId = messageId
+         this.messageType = messageType
+         this.image = image
+         this.timestamp =timestamp
+     }
+     constructor(senderId : String, message : String,messageId :String, messageType: MessageType,image :String,timestamp : Long, layoutType: LayoutType){
+         this.senderId = senderId
+         this.message = message
+         this.messageId = messageId
+         this.messageType = messageType
+         this.image = image
+         this.timestamp =timestamp
+         this.layoutType = layoutType
+     }
 
 
  }

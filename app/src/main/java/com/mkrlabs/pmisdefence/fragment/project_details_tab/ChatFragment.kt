@@ -2,6 +2,7 @@ package com.mkrlabs.pmisdefence.fragment.project_details_tab
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,10 @@ import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.mkrlabs.pmisdefence.adapter.MessageAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentChatBinding
+import com.mkrlabs.pmisdefence.model.LayoutType
 import com.mkrlabs.pmisdefence.model.Message
 import com.mkrlabs.pmisdefence.model.MessageType
 import com.mkrlabs.pmisdefence.util.CommonFunction
@@ -76,32 +77,35 @@ class ChatFragment : Fragment() {
                 var messageText = binding.messageInput.text.toString()
                 val messageId = database.push().key.toString()
 
-                var messageItem = Message(messageText,messageId,MessageType.TEXT,"",Date().time)
-
-                CommonFunction.infoToast(view.context,"Before Send Message")
+                var messageItem = Message(CommonFunction.loggedInUserUID(),messageText,messageId,MessageType.TEXT,"",Date().time)
                 sendMessage(view.context,messageItem)
-
             }
         }
 
 
-/*
 
-        database.reference
+        database
             .child(Constant.CHAT_NODE)
             .child(CHAT_ROOM_MINE)
             .child(MESSAGE_NODE)
-            .addValueEventListener(object :ValueEventListener{
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     chatMessageList.clear()
                     for (data in snapshot.children){
                         var message : Message? = data.getValue(Message::class.java)
                         if (message != null) {
+
+                            if (message.senderId.equals(CommonFunction.loggedInUserUID())){
+                                message.layoutType = LayoutType.SENDER
+                            }else{
+                                message.layoutType = LayoutType.RECEIVER
+                            }
+
                             chatMessageList.add(message)
                         }
                     }
-                    adapter.notifyDataSetChanged()
+                    messageAdapter.notifyDataSetChanged()
                 }
                 override fun onCancelled(error: DatabaseError) {
                     CommonFunction.errorToast(view.context,"Error ${error.message}")
@@ -110,7 +114,6 @@ class ChatFragment : Fragment() {
             })
 
 
-*/
 
 
 
@@ -121,10 +124,7 @@ class ChatFragment : Fragment() {
         buildChatRoom()
     }
 
-    fun sendMessage(context: Context,message: Message){
-
-        CommonFunction.infoToast(context,"OnSend Message")
-
+    fun sendMessage(context: Context, message: Message){
 
 
         database.child(Constant.CHAT_NODE)
@@ -133,15 +133,12 @@ class ChatFragment : Fragment() {
             .child(message.messageId)
             .setValue(message)
             .addOnSuccessListener {
-                CommonFunction.successToast(context,"Mine Completed")
-
                 database.child(Constant.CHAT_NODE)
                     .child(CHAT_ROOM_HIS)
                     .child(MESSAGE_NODE)
                     .child(message.messageId)
                     .setValue(message)
                     .addOnSuccessListener {
-                        CommonFunction.successToast(context,"His Completed")
 
                         binding.messageInput.setText("")
 
@@ -154,6 +151,13 @@ class ChatFragment : Fragment() {
                 CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
                 it.printStackTrace()
             }
+
+
+
+
+
+
+
     }
     private fun buildChatRoom(){
 
