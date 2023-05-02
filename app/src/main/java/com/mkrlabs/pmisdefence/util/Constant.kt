@@ -3,6 +3,7 @@ package com.mkrlabs.pmisdefence.util
 object Constant {
 
     const val APPNAME = "PMIS"
+    const val TYPING_STATUS_KEY = "typing_status"
 
     const val USER_NODE = "users"
 

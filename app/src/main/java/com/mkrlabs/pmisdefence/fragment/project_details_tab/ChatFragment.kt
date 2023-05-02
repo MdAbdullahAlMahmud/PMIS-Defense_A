@@ -2,12 +2,17 @@ package com.mkrlabs.pmisdefence.fragment.project_details_tab
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -54,18 +59,9 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         init()
         database = FirebaseDatabase.getInstance().reference
-
         chatMessageList = ArrayList()
         messageAdapter = MessageAdapter(chatMessageList)
         initRecycleView(view.context)
-
-
-
-
-
-
-
-
         binding.sendButton.setOnClickListener {
 
 
@@ -83,29 +79,58 @@ class ChatFragment : Fragment() {
         }
 
 
+        val handler = Handler(Looper.myLooper()!!)
 
-        database
-            .child(Constant.CHAT_NODE)
+        binding.messageInput.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+                database
+                    .child(Constant.CHAT_NODE)
+                    .child(CHAT_ROOM_HIS)
+                    .child(Constant.TYPING_STATUS_KEY)
+                    .setValue("typing..")
+
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed(userStoppedTyping,1000)
+            }
+
+            var userStoppedTyping = Runnable {
+                database
+                    .child(Constant.CHAT_NODE)
+                    .child(CHAT_ROOM_HIS)
+                    .child(Constant.TYPING_STATUS_KEY)
+                    .setValue("")
+            }
+        })
+
+
+        database.child(Constant.CHAT_NODE)
             .child(CHAT_ROOM_MINE)
             .child(MESSAGE_NODE)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-
                     chatMessageList.clear()
                     for (data in snapshot.children){
                         var message : Message? = data.getValue(Message::class.java)
                         if (message != null) {
-
                             if (message.senderId.equals(CommonFunction.loggedInUserUID())){
                                 message.layoutType = LayoutType.SENDER
                             }else{
                                 message.layoutType = LayoutType.RECEIVER
                             }
-
                             chatMessageList.add(message)
                         }
                     }
                     messageAdapter.notifyDataSetChanged()
+                    binding.recyclerView.smoothScrollToPosition(messageAdapter.itemCount)
+
                 }
                 override fun onCancelled(error: DatabaseError) {
                     CommonFunction.errorToast(view.context,"Error ${error.message}")
@@ -114,14 +139,35 @@ class ChatFragment : Fragment() {
             })
 
 
+        database.child(Constant.CHAT_NODE)
+            .child(CHAT_ROOM_MINE)
+            .child(Constant.TYPING_STATUS_KEY)
+            .addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()){
+                        Log.v("TypingStatus", "Exists  ${snapshot.value.toString()}")
+                        binding.OnChatUserTypingStatus.text = snapshot.value.toString()
+                    }else{
+                        binding.OnChatUserTypingStatus.text = ""
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    CommonFunction.errorToast(view.context,"Error ${error.message}")
+                }
+            })
 
 
-
-
-
+        binding.OnChatBackButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
     fun init(){
         buildChatRoom()
+        setUpUserProfile()
+    }
+    fun setUpUserProfile(){
+
+        binding.OnChatUserName.text = chatItem.chatItem.name.toString()
     }
 
     fun sendMessage(context: Context, message: Message){
@@ -141,6 +187,8 @@ class ChatFragment : Fragment() {
                     .addOnSuccessListener {
 
                         binding.messageInput.setText("")
+                        binding.recyclerView.smoothScrollToPosition(messageAdapter.itemCount)
+
 
                     }.addOnFailureListener {
                         CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
