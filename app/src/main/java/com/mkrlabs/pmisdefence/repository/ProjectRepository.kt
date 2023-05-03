@@ -5,7 +5,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mkrlabs.pmisdefence.model.Project
+import com.mkrlabs.pmisdefence.model.Student
 import com.mkrlabs.pmisdefence.model.TaskItem
+import com.mkrlabs.pmisdefence.model.UserType
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
 import java.util.concurrent.CopyOnWriteArrayList
@@ -166,9 +168,6 @@ class ProjectRepository @Inject constructor(
         projectId:String,
         result: (Resource<Pair<Int,Int>>) ->Unit
     ){
-
-
-
         firebaseFirestore.collection(Constant.PROJECT_NODE)
             .document(projectId)
             .collection(Constant.TASK_NODE)
@@ -194,8 +193,32 @@ class ProjectRepository @Inject constructor(
                     )
                 )
             }
-
     }
+
+
+    suspend fun getAllTeamMemberListSuggestion(
+        result : (Resource<List<Student>>) -> Unit) {
+
+        firebaseFirestore.collection(Constant.USER_NODE)
+            .get()
+            .addOnSuccessListener {
+                val user_list = arrayListOf<Student>()
+                for (document in it) {
+                    val team = document.toObject(Student::class.java)
+                    if (team.type==UserType.STUDENT){
+                        user_list.add(team)
+                    }
+                }
+                result.invoke(
+                    Resource.Success(user_list)
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(Resource.Error(it.localizedMessage.toString()))
+            }
+    }
+
+
 
 
 

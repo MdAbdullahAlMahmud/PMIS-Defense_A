@@ -13,25 +13,20 @@ import javax.inject.Inject
 
 class ChatRepository @Inject constructor(val firebaseFirestore: FirebaseFirestore, val mAuth: FirebaseAuth
 ){
-
-
     suspend fun chatUserList(result: (Resource<List<ChatItem>>) -> Unit){
         firebaseFirestore.collection(Constant.USER_NODE)
             .get().addOnSuccessListener {
                 val userList = arrayListOf<ChatItem>()
                 for (document in it) {
                     val user = document.toObject(ChatItem::class.java)
-
                     if (user.uid != mAuth.currentUser?.uid){
                         userList.add(user)
                     }
-
                     result.invoke(Resource.Success(userList))
                 }
             }.addOnFailureListener {
                 result.invoke(Resource.Error(it.localizedMessage.toString()))
             }
-
     }
 
     suspend fun  sendMessage(mineChatUID : String , hisChatUID:String ,message: ChatMessage, result: (Resource<ChatMessage>) -> Unit){

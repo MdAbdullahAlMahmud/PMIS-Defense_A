@@ -85,17 +85,16 @@ class HomeFragment : Fragment() {
 
         }
 
-
-        projectAdapter.setOnGroupMessageClickListener {
-
+        projectAdapter.setOnAddTeamMemberItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("project",it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_teacherAddMemberFragment,bundle)
         }
 
 
-
-
-
-
-
+        projectAdapter.setOnGroupMessageClickListener {
+        }
 
     }
 

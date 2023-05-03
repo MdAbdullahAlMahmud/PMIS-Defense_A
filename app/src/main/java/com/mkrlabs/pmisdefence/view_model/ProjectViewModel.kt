@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.mkrlabs.pmisdefence.model.Project
+import com.mkrlabs.pmisdefence.model.Student
 import com.mkrlabs.pmisdefence.model.TaskItem
 import com.mkrlabs.pmisdefence.repository.ProjectRepository
 import com.mkrlabs.pmisdefence.util.Resource
@@ -25,51 +26,44 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
     var deleteTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
     var editTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
     var overviewTaskItemState : MutableLiveData<Resource<Pair<Int,Int>>> = MutableLiveData()
-
-
+    var teamMemberSuggestionListState : MutableLiveData<Resource<List<Student>>> = MutableLiveData()
 
 
     fun createProject(project: Project){
         createProjectState.value = Resource.Loading()
-
         viewModelScope.launch{
             repository.createProject(project){
                 createProjectState.postValue(it)
             }
         }
-
     }
 
 
     fun  createNewTask(projectId : String ,taskItem: TaskItem){
         createTaskItemState.postValue(Resource.Loading())
-
         viewModelScope.launch {
             repository.addTaskToProject(projectId,taskItem){
                 createTaskItemState.postValue(it)
             }
         }
-
     }
     fun  deleteTask(projectId : String ,taskItem: TaskItem){
         deleteTaskItemState.postValue(Resource.Loading())
-
         viewModelScope.launch {
             repository.deleteTaskFromProject(projectId,taskItem.id){
                 deleteTaskItemState.postValue(it)
             }
         }
-
     }
+
+
     fun  editTask(projectId : String ,taskItem: TaskItem){
         editTaskItemState.postValue(Resource.Loading())
-
         viewModelScope.launch {
             repository.editTaskFromProject(projectId,taskItem){
                 editTaskItemState.postValue(it)
             }
         }
-
     }
 
     fun  fetchProjectList(){
@@ -79,34 +73,25 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
                 repository.getAllProjectUnderTeacher(it.uid){
                     projectList.postValue(it)
                 }
-
             }
         }
     }
-
     fun  fetchTaskList(projectId: String){
         taskItemList.postValue(Resource.Loading())
         viewModelScope.launch {
                 repository.getAllTaskListOfAProject(projectId){
                     taskItemList.postValue(it)
                 }
-
-
         }
     }
-
     fun  fetchOverviewTaskSize(projectId: String){
         overviewTaskItemState.postValue(Resource.Loading())
         viewModelScope.launch {
                 repository.getAllTaskOverviewOfAProject(projectId){
                     overviewTaskItemState.postValue(it)
                 }
-
-
         }
     }
-
-
 
 
 
@@ -114,6 +99,16 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
         val formatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
         val formattedDate = formatter.format(selectedDate)
         response.invoke(formattedDate)
+    }
+
+
+    fun fetchTeamMemberSuggestList(){
+        teamMemberSuggestionListState.postValue(Resource.Loading())
+        viewModelScope.launch {
+            repository.getAllTeamMemberListSuggestion {
+                teamMemberSuggestionListState.postValue(it)
+            }
+        }
     }
 
 
