@@ -38,6 +38,9 @@
         <action
             android:id="@+id/action_homeFragment_to_projectDetailsFragment"
             app:destination="@id/projectDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_teacherAddMemberFragment"
+            app:destination="@id/teacherAddMemberFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"

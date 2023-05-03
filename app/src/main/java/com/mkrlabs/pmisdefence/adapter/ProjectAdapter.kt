@@ -36,6 +36,12 @@ class ProjectAdapter : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() 
             }
         }
 
+        holder.binding.addTeamMemberTeamItem.setOnClickListener {
+            OnAddTeamMemberItemClickListener?.let {
+                it(project)
+            }
+        }
+
         holder.binding.groupMessage.setOnClickListener{
 
             OnGroupMessageItemClickListener?.let {
@@ -51,6 +57,14 @@ class ProjectAdapter : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() 
     fun setOnProjectItemClickListener(listener : (Project)->Unit){
         onProjectsItemClickListener = listener
     }
+
+     private  var OnAddTeamMemberItemClickListener :((Project)->Unit)? = null
+
+    fun setOnAddTeamMemberItemClickListener(listener : (Project)->Unit){
+        OnAddTeamMemberItemClickListener = listener
+    }
+
+
 
 
     private  var OnGroupMessageItemClickListener :((Project)->Unit)? = null

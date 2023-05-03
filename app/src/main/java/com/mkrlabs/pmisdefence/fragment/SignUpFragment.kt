@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.databinding.FragmentSignUpBinding
 import com.mkrlabs.pmisdefence.model.Teacher
+import com.mkrlabs.pmisdefence.model.UserType
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Resource
 import com.mkrlabs.pmisdefence.view_model.AuthenticationViewModel
@@ -93,7 +94,7 @@ class SignUpFragment : Fragment() {
                 CommonFunction.successToast(view.context,"Password must be same")
             }
 
-            val teacher = Teacher(name, email,confirm_password,teacher_id,"","Teacher","","","")
+            val teacher = Teacher(name, email,confirm_password,teacher_id,"","Teacher","","","",UserType.TEACHER)
             authViewModel.createUserAccount(teacher)
 
         }

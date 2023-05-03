@@ -5,38 +5,115 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.widget.CheckBox
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.Chip
 import com.mkrlabs.pmisdefence.R
+import com.mkrlabs.pmisdefence.adapter.MemberAddAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentTeacherAddMemberBinding
+import com.mkrlabs.pmisdefence.model.Student
 import com.mkrlabs.pmisdefence.util.CommonFunction
-
-
+import com.mkrlabs.pmisdefence.util.Resource
+import com.mkrlabs.pmisdefence.view_model.ProjectViewModel
+import dagger.hilt.android.AndroidEntryPoint
+@AndroidEntryPoint
 class TeacherAddMemberFragment : Fragment() {
-
-
     lateinit var binding : FragmentTeacherAddMemberBinding
-
     val project : TeacherAddMemberFragmentArgs by navArgs()
+    lateinit var memberAdapter : MemberAddAdapter
+    lateinit var  projectViewModel: ProjectViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentTeacherAddMemberBinding.inflate(inflater)
+    ): View? { binding = FragmentTeacherAddMemberBinding.inflate(inflater)
         return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        memberAdapter = MemberAddAdapter()
+        setUpRecycleView()
+        projectViewModel = ViewModelProvider(this)[ProjectViewModel::class.java]
+        projectViewModel.fetchTeamMemberSuggestList()
+        binding.addMemberBackButton.setOnClickListener { findNavController().navigateUp() }
+        projectViewModel.teamMemberSuggestionListState.observe(viewLifecycleOwner, Observer { response ->
+
+
+            when(response){
+
+                is Resource.Success->{
+                    hideLoading()
+                    response.data?.let {
+
+                        memberAdapter.differ.submitList(it)
+                        memberAdapter.notifyDataSetChanged()
+                        CommonFunction.successToast(view.context,it.size.toString())
+                    }
+
+                }
+
+                is Resource.Loading->{
+                    showLoading()
+
+                }
+
+                is Resource.Error->{
+                    hideLoading()
+                    CommonFunction.successToast(view.context,"Something went wrong")
+                }
+            }
+        })
+        memberAdapter.setOnCheckStatusItemClickListener { student, b,checkbox ->
+            CommonFunction.infoToast(view.context,"${student.name} -> $b")
+            addSelectedTeamMemberChipGroup(student,b,checkbox)
+        }
     }
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.addMemberBackButton.setOnClickListener {
-            findNavController().navigateUp()
+    private fun addSelectedTeamMemberChipGroup(student: Student, isChecked: Boolean,checkBox: CheckBox){
+        val chipItem = Chip(context)
+        chipItem.text = student.id
+        chipItem.isCloseIconVisible = true
+        chipItem.setTextColor( resources.getColor(R.color.primaryColor))
+        chipItem.isClickable = true
+        chipItem.isFocusable = true
+        chipItem.setOnCloseIconClickListener {
+            binding.memberSelectedChipGroup.removeView(it)
+            checkBox.isChecked =false
         }
+        binding.memberSelectedChipGroup.addView(chipItem)
+    }
+    private val chipClickListener = View.OnClickListener {
 
-        CommonFunction.successToast(view.context,"Project -> "+ project.project.projectName)
+        val anim = AlphaAnimation(1f,0f)
+        anim.duration = 250
+        anim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {}
 
+            override fun onAnimationEnd(animation: Animation?) {
+                binding.memberSelectedChipGroup.removeView(it)
+            }
+            override fun onAnimationStart(animation: Animation?) {}
+        })
+        it.startAnimation(anim)
 
+    }
+    private fun showLoading(){
+        binding.teacherAddMemberProgressbar.visibility = View.VISIBLE
+    }
+    private fun hideLoading(){
+        binding.teacherAddMemberProgressbar.visibility = View.GONE
+    }
+    private fun setUpRecycleView(){
+        binding.teacherAddMemberRV.apply {
+            adapter = memberAdapter
+            layoutManager =  LinearLayoutManager(activity)
+        }
     }
 
 }

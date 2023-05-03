@@ -1,17 +1,18 @@
 package com.mkrlabs.pmisdefence.model
 
 
-  class Teacher
-    (
+class Teacher(
     name:String,
     email :String,
     password:String,
     id :String,
     uid:String,
-    val  designation:String,
-    val phone:String,
-    val image: String,
-    val room: String,
+
+    var  designation: String,
+    var phone: String,
+    var image: String,
+    var room: String,
+    var type: UserType
 
 
 
