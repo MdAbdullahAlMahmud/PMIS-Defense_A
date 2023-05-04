@@ -220,6 +220,24 @@ class ProjectRepository @Inject constructor(
 
 
 
+    suspend fun addMemberToProject(projectId : String , list :  List<Student> , result : (Resource<String>) -> Unit){
+        var count = 0
+       list.forEach {student ->
+            student.projectId = projectId
+           firebaseFirestore.collection(Constant.USER_NODE)
+               .document(student.uid)
+               .set(student).addOnSuccessListener{
+                   count ++
+               }.addOnFailureListener{
+                   it.printStackTrace()
+                   result.invoke(Resource.Error(it.localizedMessage.toString()))
+               }
+           }
+            result.invoke(Resource.Success("Successfully"))
+    }
+
+
+
 
 
 

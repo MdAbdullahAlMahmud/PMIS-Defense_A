@@ -28,6 +28,8 @@ class TeacherAddMemberFragment : Fragment() {
     val project : TeacherAddMemberFragmentArgs by navArgs()
     lateinit var memberAdapter : MemberAddAdapter
     lateinit var  projectViewModel: ProjectViewModel
+
+    lateinit var  studentList: ArrayList<Student>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +40,7 @@ class TeacherAddMemberFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         memberAdapter = MemberAddAdapter()
         setUpRecycleView()
+        studentList = ArrayList<Student>()
         projectViewModel = ViewModelProvider(this)[ProjectViewModel::class.java]
         projectViewModel.fetchTeamMemberSuggestList()
         binding.addMemberBackButton.setOnClickListener { findNavController().navigateUp() }
@@ -49,10 +52,8 @@ class TeacherAddMemberFragment : Fragment() {
                 is Resource.Success->{
                     hideLoading()
                     response.data?.let {
-
                         memberAdapter.differ.submitList(it)
                         memberAdapter.notifyDataSetChanged()
-                        CommonFunction.successToast(view.context,it.size.toString())
                     }
 
                 }
@@ -68,26 +69,80 @@ class TeacherAddMemberFragment : Fragment() {
                 }
             }
         })
-        memberAdapter.setOnCheckStatusItemClickListener { student, b,checkbox ->
-            CommonFunction.infoToast(view.context,"${student.name} -> $b")
-            addSelectedTeamMemberChipGroup(student,b,checkbox)
+
+
+
+        memberAdapter.setOnMemberItemClickListener{
+
+            studentList.add(it)
+            addSelectedTeamMemberChipGroup(it)
+
+        }
+
+
+
+        binding.addMemberCreateTeamButton.setOnClickListener {
+
+
+            projectViewModel.addMemberToProject( project.project.projectUID,studentList)
+
+            projectViewModel.addTeamMemberToProjectState.observe(viewLifecycleOwner, Observer {response ->
+
+                when(response){
+
+                    is Resource.Success->{
+                        hideLoading()
+                        response.data?.let {
+
+                            CommonFunction.successToast(view.context,it)
+                            findNavController().navigateUp()
+                        }
+
+                    }
+
+                    is Resource.Loading->{
+                        showLoading()
+
+                    }
+
+                    is Resource.Error->{
+                        hideLoading()
+                        CommonFunction.successToast(view.context,response.message.toString())
+                    }
+                }
+
+
+            })
+
+
+
         }
     }
 
 
-    private fun addSelectedTeamMemberChipGroup(student: Student, isChecked: Boolean,checkBox: CheckBox){
+    private fun addSelectedTeamMemberChipGroup(student: Student){
         val chipItem = Chip(context)
         chipItem.text = student.id
         chipItem.isCloseIconVisible = true
         chipItem.setTextColor( resources.getColor(R.color.primaryColor))
         chipItem.isClickable = true
         chipItem.isFocusable = true
+
+
         chipItem.setOnCloseIconClickListener {
+            studentList.remove(student)
             binding.memberSelectedChipGroup.removeView(it)
-            checkBox.isChecked =false
         }
+
         binding.memberSelectedChipGroup.addView(chipItem)
+
     }
+
+    private fun removeStudentFromList(student: Student){
+
+
+    }
+
     private val chipClickListener = View.OnClickListener {
 
         val anim = AlphaAnimation(1f,0f)

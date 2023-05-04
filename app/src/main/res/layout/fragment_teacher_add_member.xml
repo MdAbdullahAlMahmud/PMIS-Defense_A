@@ -79,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/materialButton"
+        app:layout_constraintBottom_toTopOf="@+id/addMemberCreateTeamButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +88,7 @@
         tools:listitem="@layout/user_item" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/materialButton"
+        android:id="@+id/addMemberCreateTeamButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create Team"

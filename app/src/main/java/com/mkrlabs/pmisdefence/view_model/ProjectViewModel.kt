@@ -27,6 +27,7 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
     var editTaskItemState : MutableLiveData<Resource<String>> = MutableLiveData()
     var overviewTaskItemState : MutableLiveData<Resource<Pair<Int,Int>>> = MutableLiveData()
     var teamMemberSuggestionListState : MutableLiveData<Resource<List<Student>>> = MutableLiveData()
+    var addTeamMemberToProjectState : MutableLiveData<Resource<String>> = MutableLiveData()
 
 
     fun createProject(project: Project){
@@ -109,6 +110,17 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
                 teamMemberSuggestionListState.postValue(it)
             }
         }
+    }
+
+
+    fun addMemberToProject(projectId: String , list : List<Student>){
+        addTeamMemberToProjectState.postValue(Resource.Loading())
+        viewModelScope.launch {
+            repository.addMemberToProject(projectId,list){
+                addTeamMemberToProjectState.postValue(it)
+            }
+        }
+
     }
 
 
