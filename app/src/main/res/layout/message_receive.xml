@@ -22,8 +22,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/receive_message_item_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/dummy_person"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,8 +62,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/receive_image"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/dummy_person"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
