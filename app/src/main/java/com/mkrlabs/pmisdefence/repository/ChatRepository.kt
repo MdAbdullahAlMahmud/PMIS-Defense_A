@@ -11,17 +11,19 @@ import com.mkrlabs.pmisdefence.util.Resource
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
-class ChatRepository @Inject constructor(val firebaseFirestore: FirebaseFirestore, val mAuth: FirebaseAuth
+class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFirestore, val mAuth: FirebaseAuth
 ){
-    suspend fun chatUserList(result: (Resource<List<ChatItem>>) -> Unit){
+    suspend fun chatUserList(projectId : String , result: (Resource<List<ChatItem>>) -> Unit){
         firebaseFirestore.collection(Constant.USER_NODE)
             .get().addOnSuccessListener {
                 val userList = arrayListOf<ChatItem>()
                 for (document in it) {
                     val user = document.toObject(ChatItem::class.java)
-                    if (user.uid != mAuth.currentUser?.uid){
+
+                    if (user.uid != mAuth.currentUser?.uid && user.projectId.equals(projectId)){
                         userList.add(user)
                     }
+
                     result.invoke(Resource.Success(userList))
                 }
             }.addOnFailureListener {

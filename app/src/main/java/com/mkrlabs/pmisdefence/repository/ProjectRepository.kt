@@ -4,10 +4,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.mkrlabs.pmisdefence.model.Project
-import com.mkrlabs.pmisdefence.model.Student
-import com.mkrlabs.pmisdefence.model.TaskItem
-import com.mkrlabs.pmisdefence.model.UserType
+import com.mkrlabs.pmisdefence.model.*
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
 import java.util.concurrent.CopyOnWriteArrayList
@@ -17,10 +14,6 @@ class ProjectRepository @Inject constructor(
     val firebaseFirestore: FirebaseFirestore,
     val mAuth: FirebaseAuth
 ) {
-
-
-
-
     suspend fun createProject(
         project: Project,
         result: (Resource<Pair<Project, String>>) -> Unit
@@ -59,10 +52,47 @@ class ProjectRepository @Inject constructor(
             .get()
             .addOnSuccessListener {
                 val projects = arrayListOf<Project>()
+
                 for (document in it) {
                     val project = document.toObject(Project::class.java)
                     projects.add(project)
                 }
+
+                var userList = ArrayList<Student>()
+                firebaseFirestore.collection(Constant.USER_NODE)
+                    .get().addOnSuccessListener {
+
+                        for (document in it) {
+                            val user = document.toObject(Student::class.java)
+                            userList.add(user)                        }
+
+
+                    }.addOnFailureListener {
+                        it.printStackTrace()
+                        result.invoke(
+                            Resource.Error(
+                                it.localizedMessage
+                            )
+                        )
+                    }
+
+
+
+                for (index in projects.indices){
+                    var projectItem = projects[index]
+                    var tempList = ArrayList<Student>()
+                    for (user in userList){
+
+                       if( projectItem.projectUID.equals(user.projectId)){
+                            tempList.add(user)
+                        }
+                    }
+
+                    projects[index].userList = tempList
+                    tempList.clear()
+
+                }
+                
                 result.invoke(
                     Resource.Success(projects)
                 )
@@ -216,6 +246,22 @@ class ProjectRepository @Inject constructor(
             .addOnFailureListener {
                 result.invoke(Resource.Error(it.localizedMessage.toString()))
             }
+    }
+
+
+
+    suspend fun addMemberToProject(projectId : String , list :  List<Student> , result : (Resource<String>) -> Unit){
+       list.forEach {student ->
+            student.projectId = projectId
+           firebaseFirestore.collection(Constant.USER_NODE)
+               .document(student.uid)
+               .set(student).addOnSuccessListener{
+               }.addOnFailureListener{
+                   it.printStackTrace()
+                   result.invoke(Resource.Error(it.localizedMessage.toString()))
+               }
+           }
+            result.invoke(Resource.Success("Successfully"))
     }
 
 

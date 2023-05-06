@@ -49,12 +49,12 @@ class ChatViewModel @Inject constructor(val repository: ChatRepository , val mAu
         }
     }
 
-    fun  chatUserList(){
+    fun  chatUserList(projectId : String){
         val loggegInUserId = mAuth.currentUser?.uid
         chatUserListState.postValue(Resource.Loading())
 
         viewModelScope.launch {
-            repository.chatUserList {
+            repository.chatUserList(projectId) {
                 chatUserListState.postValue(it)
             }
         }

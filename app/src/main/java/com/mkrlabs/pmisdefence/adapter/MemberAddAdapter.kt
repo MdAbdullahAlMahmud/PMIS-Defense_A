@@ -29,21 +29,18 @@ class MemberAddAdapter : RecyclerView.Adapter<MemberAddAdapter.MemberAddViewHold
             holder.binding.userItemNameTV.text = student.name
             holder.binding.userItemIdTV.text = student.id
         }
-
-        holder.binding.userItemSelectionStatus.setOnCheckedChangeListener { compoundButton, b ->
-            OnCheckStatusItemClickListener?.let { it(student,b,holder.binding.userItemSelectionStatus) }
+        holder.binding.userItemSelectionAddButton.setOnClickListener {
+            OnMemberAddItemClickListener?.let{
+                it(student)
+            }
         }
 
     }
 
-    private  var OnCheckStatusItemClickListener :((Student,Boolean,CheckBox)->Unit)? = null
-
-    fun  setOnCheckStatusItemClickListener (listener: (Student,Boolean,CheckBox)->Unit){
-        OnCheckStatusItemClickListener = listener
+    private  var OnMemberAddItemClickListener :((Student)->Unit)? = null
+    fun  setOnMemberItemClickListener (listener: (Student)->Unit){
+        OnMemberAddItemClickListener = listener
     }
-
-
-
 
     private  val  differCallback =object: DiffUtil.ItemCallback<Student>(){
 

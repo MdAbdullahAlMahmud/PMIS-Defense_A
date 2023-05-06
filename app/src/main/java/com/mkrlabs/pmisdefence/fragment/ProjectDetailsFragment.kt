@@ -37,7 +37,7 @@ class ProjectDetailsFragment : Fragment() {
         val adapter = MyPagerAdapter(childFragmentManager, lifecycle)
         adapter.addFragment(OverviewTabFragment(project.project.projectUID), "Overview")
         adapter.addFragment(TeacherTaskAddFragment(project.project.projectUID), "Task")
-        adapter.addFragment(ChatTabFragment(), "Chat")
+        adapter.addFragment(ChatTabFragment(project.project.projectUID), "Chat")
 
         binding.tabViewPager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.tabViewPager) { tab, position ->

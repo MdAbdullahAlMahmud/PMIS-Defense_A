@@ -18,7 +18,7 @@ import com.mkrlabs.pmisdefence.view_model.ChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ChatTabFragment : Fragment() {
+class ChatTabFragment(val projectId :String) : Fragment() {
 
     lateinit var binding : FragmentChatTabBinding
     lateinit var chatAdapter : ChatAdapter
@@ -39,7 +39,7 @@ class ChatTabFragment : Fragment() {
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         initRecycleView()
 
-        viewModel.chatUserList()
+        viewModel.chatUserList(projectId)
         viewModel.chatUserListState.observe(viewLifecycleOwner, Observer {response->
 
             when(response){
