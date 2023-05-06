@@ -20,7 +20,7 @@ class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFiresto
                 for (document in it) {
                     val user = document.toObject(ChatItem::class.java)
 
-                    if (user.uid != mAuth.currentUser?.uid && user.projectId.equals(projectId)){
+                    if (user.uid != mAuth.currentUser?.uid /*&& user.projectId.equals(projectId)*/){
                         userList.add(user)
                     }
 
