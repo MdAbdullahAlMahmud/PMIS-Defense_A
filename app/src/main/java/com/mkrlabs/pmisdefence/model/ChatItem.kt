@@ -6,6 +6,7 @@ data class ChatItem (
    var name : String = "",
    var uid : String = "",
    var role : String = "",
-   var image : String = ""
+   var image : String = "",
+   var projectId : String = ""
 ) : Serializable {
 }

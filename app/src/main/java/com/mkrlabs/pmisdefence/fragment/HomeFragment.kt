@@ -62,9 +62,7 @@ class HomeFragment : Fragment() {
             when(response){
                 is Resource.Success->{
                     hideLoading()
-                    response.data?.let {
-                        projectAdapter.differ.submitList(it)
-                    }
+                    response.data?.let { projectAdapter.differ.submitList(it) }
                 }
                 is Resource.Loading->{
                     showLoading()
@@ -78,17 +76,12 @@ class HomeFragment : Fragment() {
 
         projectAdapter.setOnProjectItemClickListener { project ->
             val projectIntent = project
-            val bundle = Bundle().apply {
-                putSerializable("project",projectIntent)
-            }
-        findNavController().navigate(R.id.action_homeFragment_to_projectDetailsFragment,bundle)
-
+            val bundle = Bundle().apply { putSerializable("project",projectIntent) }
+            findNavController().navigate(R.id.action_homeFragment_to_projectDetailsFragment,bundle)
         }
 
         projectAdapter.setOnAddTeamMemberItemClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("project",it)
-            }
+            val bundle = Bundle().apply {putSerializable("project",it)}
             findNavController().navigate(R.id.action_homeFragment_to_teacherAddMemberFragment,bundle)
         }
 

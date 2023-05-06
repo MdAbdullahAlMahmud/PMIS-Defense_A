@@ -1,7 +1,4 @@
 package com.mkrlabs.pmisdefence.model
-
-import android.provider.ContactsContract.CommonDataKinds.Email
-
 open class User{
      var name:String= ""
      var email :String= ""

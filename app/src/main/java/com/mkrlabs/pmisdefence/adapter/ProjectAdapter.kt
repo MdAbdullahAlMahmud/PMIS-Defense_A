@@ -26,38 +26,29 @@ class ProjectAdapter : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() 
         holder.itemView.apply {
            // Glide.with(context).load(article.urlToImage).into(holder.binding.ivArticleImage)
             holder.binding.teamProjectName.text = project.projectName
-            holder.binding.teamProjectType.text = project.projectType
+            holder.binding.teamProjectType.text = project.projectType + " -> ${project.userList?.size}"
 
         }
-
         holder.binding.teamItemCV.setOnClickListener {
             onProjectsItemClickListener?.let {
                 it(project)
             }
         }
-
         holder.binding.addTeamMemberTeamItem.setOnClickListener {
             OnAddTeamMemberItemClickListener?.let {
                 it(project)
             }
         }
-
         holder.binding.groupMessage.setOnClickListener{
-
             OnGroupMessageItemClickListener?.let {
                 it(project)
             }
         }
-
-
     }
-
     private  var onProjectsItemClickListener :((Project)->Unit)? = null
-
     fun setOnProjectItemClickListener(listener : (Project)->Unit){
         onProjectsItemClickListener = listener
     }
-
      private  var OnAddTeamMemberItemClickListener :((Project)->Unit)? = null
 
     fun setOnAddTeamMemberItemClickListener(listener : (Project)->Unit){
