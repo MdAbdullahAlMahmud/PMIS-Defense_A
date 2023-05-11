@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.mkrlabs.pmisdefence.adapter.MessageAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentChatBinding
+import com.mkrlabs.pmisdefence.model.ChatTYPE
 import com.mkrlabs.pmisdefence.model.LayoutType
 import com.mkrlabs.pmisdefence.model.Message
 import com.mkrlabs.pmisdefence.model.MessageType
@@ -45,6 +46,7 @@ class ChatFragment : Fragment() {
 
     lateinit var CHAT_ROOM_MINE :String
     lateinit var CHAT_ROOM_HIS :String
+    lateinit var CHAT_ROOM_GROUP :String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -173,36 +175,57 @@ class ChatFragment : Fragment() {
     fun sendMessage(context: Context, message: Message){
 
 
-        database.child(Constant.CHAT_NODE)
-            .child(CHAT_ROOM_MINE)
-            .child(MESSAGE_NODE)
-            .child(message.messageId)
-            .setValue(message)
-            .addOnSuccessListener {
-                database.child(Constant.CHAT_NODE)
-                    .child(CHAT_ROOM_HIS)
-                    .child(MESSAGE_NODE)
-                    .child(message.messageId)
-                    .setValue(message)
-                    .addOnSuccessListener {
+        if (chatItem.chatItem.chatTYPE==ChatTYPE.NORMAL){
+            database.child(Constant.CHAT_NODE)
+                .child(CHAT_ROOM_MINE)
+                .child(MESSAGE_NODE)
+                .child(message.messageId)
+                .setValue(message)
+                .addOnSuccessListener {
+                    database.child(Constant.CHAT_NODE)
+                        .child(CHAT_ROOM_HIS)
+                        .child(MESSAGE_NODE)
+                        .child(message.messageId)
+                        .setValue(message)
+                        .addOnSuccessListener {
 
-                        binding.messageInput.setText("")
-                        binding.recyclerView.smoothScrollToPosition(messageAdapter.itemCount)
-
-
-                    }.addOnFailureListener {
-                        CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
-                        it.printStackTrace()
-                    }
-
-            }.addOnFailureListener {
-                CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
-                it.printStackTrace()
-            }
+                            binding.messageInput.setText("")
+                            binding.recyclerView.smoothScrollToPosition(messageAdapter.itemCount)
 
 
+                        }.addOnFailureListener {
+                            CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
+                            it.printStackTrace()
+                        }
+
+                }.addOnFailureListener {
+                    CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
+                    it.printStackTrace()
+                }
 
 
+
+
+
+
+        }else{
+            CommonFunction.infoToast(context,"group Calling")
+            database.child(Constant.CHAT_NODE)
+                .child(CHAT_ROOM_GROUP)
+                .child(MESSAGE_NODE)
+                .child(message.messageId)
+                .setValue(message)
+                .addOnSuccessListener {
+
+                    binding.messageInput.setText("")
+                    binding.recyclerView.smoothScrollToPosition(messageAdapter.itemCount)
+
+
+                }.addOnFailureListener {
+                    CommonFunction.errorToast(context,"Message sent failed with error ${it.message}")
+                    it.printStackTrace()
+                }
+        }
 
 
 
@@ -212,8 +235,14 @@ class ChatFragment : Fragment() {
         val mineUID = FirebaseAuth.getInstance().uid
         val  hisUID = chatItem.chatItem.uid
 
-        CHAT_ROOM_MINE = "${mineUID}_${hisUID}"
-        CHAT_ROOM_HIS = "${hisUID}_${mineUID}"
+        if (chatItem.chatItem.chatTYPE!=ChatTYPE.GROUP){
+            CHAT_ROOM_MINE = "${mineUID}_${hisUID}"
+            CHAT_ROOM_HIS = "${hisUID}_${mineUID}"
+        }else{
+
+            CHAT_ROOM_GROUP = "XYZXYZXYZ"
+        }
+
     }
     fun  initRecycleView(context: Context){
         binding.recyclerView.apply {

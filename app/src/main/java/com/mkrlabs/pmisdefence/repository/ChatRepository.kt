@@ -14,21 +14,42 @@ import javax.inject.Inject
 class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFirestore, val mAuth: FirebaseAuth
 ){
     suspend fun chatUserList(projectId : String , result: (Resource<List<ChatItem>>) -> Unit){
-        firebaseFirestore.collection(Constant.USER_NODE)
+        val userList = arrayListOf<ChatItem>()
+
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.TEAM_MEMBER_NODE)
+            .whereNotEqualTo("uid",CommonFunction.loggedInUserUID())
             .get().addOnSuccessListener {
-                val userList = arrayListOf<ChatItem>()
                 for (document in it) {
                     val user = document.toObject(ChatItem::class.java)
-
-                    if (user.uid != mAuth.currentUser?.uid /*&& user.projectId.equals(projectId)*/){
-                        userList.add(user)
-                    }
-
-                    result.invoke(Resource.Success(userList))
+                    userList.add(user)
                 }
+
             }.addOnFailureListener {
                 result.invoke(Resource.Error(it.localizedMessage.toString()))
             }
+
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.GROUP_NODE)
+            .whereNotEqualTo("uid",CommonFunction.loggedInUserUID())
+
+            .get().addOnSuccessListener {
+                for (document in it) {
+                    val user = document.toObject(ChatItem::class.java)
+                    userList.add(user)
+                }
+                result.invoke(Resource.Success(userList))
+
+            }.addOnFailureListener {
+                result.invoke(Resource.Error(it.localizedMessage.toString()))
+            }
+
+
+
+
+
     }
 
     suspend fun  sendMessage(mineChatUID : String , hisChatUID:String ,message: ChatMessage, result: (Resource<ChatMessage>) -> Unit){

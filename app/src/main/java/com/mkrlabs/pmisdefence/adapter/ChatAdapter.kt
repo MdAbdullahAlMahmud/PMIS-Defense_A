@@ -29,7 +29,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
         holder.itemView.apply {
             holder.binding.chatUserNameTV.text = chatItem.name
-            holder.binding.chatUserNameRole.text = chatItem.role
+            holder.binding.chatUserNameRole.text = chatItem.designation
         }
 
 
