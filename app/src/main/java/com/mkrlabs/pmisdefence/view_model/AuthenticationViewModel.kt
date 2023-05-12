@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.mkrlabs.pmisdefence.model.Teacher
+import com.mkrlabs.pmisdefence.model.User
 import com.mkrlabs.pmisdefence.repository.AuthRepository
 import com.mkrlabs.pmisdefence.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ class AuthenticationViewModel @Inject constructor (val authRepository: AuthRepos
     val loginState : MutableLiveData<Resource<FirebaseUser>> = MutableLiveData()
 
     val savedUserData : MutableLiveData<Resource<String>> = MutableLiveData()
+    val userWithUIDData : MutableLiveData<Resource<User>> = MutableLiveData()
 
 
     fun createUserAccount( teacher :Teacher) {
@@ -54,11 +56,20 @@ class AuthenticationViewModel @Inject constructor (val authRepository: AuthRepos
     fun saveUserData(teacher: Teacher){
         savedUserData.postValue(Resource.Loading())
         viewModelScope.launch {
-
             val response = authRepository.saveUserAccount(teacher)
             savedUserData.postValue(Resource.Success("Data Saved successfully"))
-
         }
     }
+
+    fun getSpecificUserWithUID(uid:String){
+        userWithUIDData.postValue(Resource.Loading())
+        viewModelScope.launch {
+            authRepository.getUserInfoWithUID(uid){
+                userWithUIDData.postValue(it)
+            }
+        }
+    }
+
+
 
 }

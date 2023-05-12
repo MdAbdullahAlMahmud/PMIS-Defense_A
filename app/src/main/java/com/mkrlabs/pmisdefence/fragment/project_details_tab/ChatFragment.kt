@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,7 @@ import com.mkrlabs.pmisdefence.model.MessageType
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Constant.MESSAGE_NODE
+import com.mkrlabs.pmisdefence.view_model.AuthenticationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 
@@ -45,6 +48,7 @@ class ChatFragment : Fragment() {
      var CHAT_ROOM_HIS :String = ""
      var CHAT_ROOM_GROUP :String = ""
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +63,13 @@ class ChatFragment : Fragment() {
         init()
         database = FirebaseDatabase.getInstance().reference
         chatMessageList = ArrayList()
-        messageAdapter = MessageAdapter(chatMessageList)
+
+
+
+
+
+
+        messageAdapter = MessageAdapter(chatMessageList,chatItem.chatItem.image)
         initRecycleView(view.context)
 
 

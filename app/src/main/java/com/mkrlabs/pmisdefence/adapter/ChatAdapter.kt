@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mkrlabs.pmisdefence.databinding.ChatItemBinding
 import com.mkrlabs.pmisdefence.databinding.TaskItemBinding
 import com.mkrlabs.pmisdefence.model.ChatItem
@@ -30,6 +31,9 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         holder.itemView.apply {
             holder.binding.chatUserNameTV.text = chatItem.name
             holder.binding.chatUserNameRole.text = chatItem.designation
+            Glide.with(this)
+                .load(chatItem.image)
+                .into(holder.binding.chatUserImage)
         }
 
 

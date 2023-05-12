@@ -15,6 +15,7 @@ class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFiresto
     suspend fun chatUserList(projectId : String , result: (Resource<List<ChatItem>>) -> Unit){
         val userList = arrayListOf<ChatItem>()
 
+
         firebaseFirestore.collection(Constant.PROJECT_NODE)
             .document(projectId)
             .collection(Constant.TEAM_MEMBER_NODE)

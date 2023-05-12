@@ -6,6 +6,8 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mkrlabs.pmisdefence.databinding.UserItemBinding
 import com.mkrlabs.pmisdefence.model.Project
 import com.mkrlabs.pmisdefence.model.Student
@@ -28,6 +30,10 @@ class MemberAddAdapter : RecyclerView.Adapter<MemberAddAdapter.MemberAddViewHold
         holder.itemView.apply {
             holder.binding.userItemNameTV.text = student.name
             holder.binding.userItemIdTV.text = student.id
+            Glide.with(this)
+                .load(student.image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.binding.userItemImage)
         }
         holder.binding.userItemSelectionAddButton.setOnClickListener {
             OnMemberAddItemClickListener?.let{

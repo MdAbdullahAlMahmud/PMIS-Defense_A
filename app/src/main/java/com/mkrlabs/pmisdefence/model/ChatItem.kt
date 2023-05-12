@@ -9,6 +9,7 @@ data class ChatItem (
    var designation : String = "",
    var timestamp: Long = 0L,
    var addedBy : String = "",
+   var image : String = "",
    var chatTYPE: ChatTYPE = ChatTYPE.NORMAL
 ) : Serializable {
 }
