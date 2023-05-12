@@ -68,6 +68,10 @@ class MessageAdapter(val  messageList : List<Message>,val receive_image : String
                     receiverViewHolder.receive_message_image_text.visibility = View.VISIBLE
                     receiverViewHolder.receive_message_image_text.setText(message.message)
                 }
+                Glide.with(receiverViewHolder.itemView)
+                    .load(message.image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(receiverViewHolder.receive_message_image)
                // receiverViewHolder.receive_message_image.setImageResource(message.image)
             } else {
                 receiverViewHolder.receiverMessageImageLayout.visibility = View.GONE
