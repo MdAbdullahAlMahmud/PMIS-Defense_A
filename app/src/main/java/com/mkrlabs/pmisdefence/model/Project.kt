@@ -11,5 +11,4 @@ data class Project(
     var projectMotivation :String= "",
     var projectObjective :String= "",
     var teacher_id :String= "",
-    var userList :List<Student>? =null
     ):Serializable

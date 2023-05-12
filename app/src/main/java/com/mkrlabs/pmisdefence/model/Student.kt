@@ -5,17 +5,16 @@ open class Student : User{
 
        var image : String =""
        var batchId : String = ""
-        var type: UserType? =null
     var projectId : String?= null
 
     constructor()
-     constructor(name:String, email:String, password:String, id :String, uid : String) : super(name,email,password,id,uid)
-     constructor(name:String, email:String, password:String, id :String, uid : String , image :String, batchId : String ,type: UserType) : this(name,email,password,id,uid){
+     constructor(name:String, email:String, password:String, id :String, uid : String,userType: UserType) : super(name,email,password,id,uid,userType)
+     constructor(name:String, email:String, password:String, id :String, uid : String , image :String, batchId : String ,type: UserType) : this(name,email,password,id,uid, type){
                  this.image = image
                  this.batchId = batchId
                  this.type = type
              }
-    constructor(name:String, email:String, password:String, id :String, uid : String , image :String, batchId : String ,type: UserType,projectId : String) : this(name,email,password,id,uid){
+    constructor(name:String, email:String, password:String, id :String, uid : String , image :String, batchId : String ,type: UserType,projectId : String) : this(name,email,password,id,uid,type){
                  this.image = image
                  this.batchId = batchId
                  this.projectId = projectId

@@ -1,5 +1,6 @@
 package com.mkrlabs.pmisdefence.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mkrlabs.pmisdefence.model.Project
 import com.mkrlabs.pmisdefence.model.Student
 import com.mkrlabs.pmisdefence.model.TaskItem
+import com.mkrlabs.pmisdefence.model.UserType
+import com.mkrlabs.pmisdefence.repository.AuthRepository
 import com.mkrlabs.pmisdefence.repository.ProjectRepository
 import com.mkrlabs.pmisdefence.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +20,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class ProjectViewModel @Inject constructor(val repository: ProjectRepository, val mAuth : FirebaseAuth) :ViewModel() {
+class ProjectViewModel @Inject constructor(val repository: ProjectRepository, val  authRepository: AuthRepository,val mAuth : FirebaseAuth) :ViewModel() {
 
     var createProjectState : MutableLiveData<Resource<Pair<Project,String>>> = MutableLiveData()
     var projectList : MutableLiveData<Resource<List<Project>>> = MutableLiveData()
@@ -69,13 +72,41 @@ class ProjectViewModel @Inject constructor(val repository: ProjectRepository, va
 
     fun  fetchProjectList(){
         projectList.postValue(Resource.Loading())
-        viewModelScope.launch {
+
             mAuth.currentUser?.let {
-                repository.getAllProjectUnderTeacher(it.uid){
-                    projectList.postValue(it)
+
+
+                viewModelScope.launch{
+                    authRepository.getUserInfo {
+                        it?.let {
+                            if (it.type==UserType.STUDENT){
+
+                                Log.v("Type","Student")
+
+                                viewModelScope.launch {
+                                    repository.getAllProjectUnderStudent(it.uid){
+                                        projectList.postValue(it)
+                                    }
+                                }
+                            }else{
+                                Log.v("Type","Teacher")
+
+                                viewModelScope.launch {
+                                    repository.getAllProjectUnderTeacher(it.uid){
+                                        projectList.postValue(it)
+                                    }
+                                }
+
+                            }
+                        }
+                    }
                 }
+
+
+
+
             }
-        }
+
     }
     fun  fetchTaskList(projectId: String){
         taskItemList.postValue(Resource.Loading())

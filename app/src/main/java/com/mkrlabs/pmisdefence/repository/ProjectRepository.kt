@@ -84,20 +84,15 @@ class ProjectRepository @Inject constructor(
         teacher_uid:String,
         result: (Resource<List<Project>>) ->Unit
     ){
-
-
-
         firebaseFirestore.collection(Constant.PROJECT_NODE)
             .whereEqualTo("teacher_id",teacher_uid)
             .get()
             .addOnSuccessListener {
                 val projects = arrayListOf<Project>()
-
                 for (document in it) {
                     val project = document.toObject(Project::class.java)
                     projects.add(project)
                 }
-
                 var userList = ArrayList<Student>()
                 firebaseFirestore.collection(Constant.USER_NODE)
                     .get().addOnSuccessListener {
@@ -115,24 +110,6 @@ class ProjectRepository @Inject constructor(
                             )
                         )
                     }
-
-
-
-                for (index in projects.indices){
-                    var projectItem = projects[index]
-                    var tempList = ArrayList<Student>()
-                    for (user in userList){
-
-                       if( projectItem.projectUID.equals(user.projectId)){
-                            tempList.add(user)
-                        }
-                    }
-
-                    projects[index].userList = tempList
-                    tempList.clear()
-
-                }
-                
                 result.invoke(
                     Resource.Success(projects)
                 )
@@ -146,6 +123,55 @@ class ProjectRepository @Inject constructor(
             }
 
     }
+
+    suspend fun getAllProjectUnderStudent(
+        student_uid:String,
+        result: (Resource<List<Project>>) ->Unit
+    ){
+        firebaseFirestore.collection(Constant.STUDENT_PROJECT_NODE)
+            .document(student_uid)
+            .get()
+            .addOnSuccessListener {
+
+
+                it.toObject(StudentProject::class.java)?.let {
+                    firebaseFirestore.collection(Constant.PROJECT_NODE)
+                        .whereEqualTo("projectID",it.projecetId)
+                        .get()
+                        .addOnSuccessListener {
+                            val projects = arrayListOf<Project>()
+                            for (document in it) {
+                                val project = document.toObject(Project::class.java)
+                                projects.add(project)
+                            }
+
+                            result.invoke(
+                                Resource.Success(projects)
+                            )
+                        }
+                        .addOnFailureListener {
+                            result.invoke(
+                                Resource.Error(
+                                    it.localizedMessage
+                                )
+                            )
+                        }
+
+
+                }
+
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    Resource.Error(
+                        it.localizedMessage
+                    )
+                )
+            }
+
+    }
+
+
 
 
     suspend fun  addTaskToProject(projectId : String , task: TaskItem,
@@ -303,6 +329,14 @@ class ProjectRepository @Inject constructor(
                .collection(Constant.TEAM_MEMBER_NODE)
                .document(student.uid)
                .set(chatItem).addOnSuccessListener{
+
+                   var  studentProject = StudentProject(projectId,loggedInUser)
+                   firebaseFirestore.collection(Constant.STUDENT_PROJECT_NODE)
+                       .document(student.uid)
+                       .set(studentProject)
+
+
+
                }.addOnFailureListener{
                    it.printStackTrace()
                    result.invoke(Resource.Error(it.localizedMessage.toString()))

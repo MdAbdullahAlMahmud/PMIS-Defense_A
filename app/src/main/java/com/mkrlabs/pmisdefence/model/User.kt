@@ -5,15 +5,17 @@ open class User{
      var  password:String= ""
      var id :String= ""
      var uid:String= ""
+    var type: UserType? =null
 
      constructor()
 
-     constructor(name: String,email: String , password : String, id : String, uid : String){
+     constructor(name: String,email: String , password : String, id : String, uid : String, userType: UserType){
          this.name = name
          this.email = email
          this.password = password
          this.id = id
          this.uid = uid
+         this.type = userType
      }
 
  }

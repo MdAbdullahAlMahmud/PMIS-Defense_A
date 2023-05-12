@@ -6,7 +6,10 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mkrlabs.pmisdefence.model.Project
 import com.mkrlabs.pmisdefence.model.Teacher
+import com.mkrlabs.pmisdefence.model.User
+import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
 import kotlinx.coroutines.tasks.await
@@ -49,6 +52,26 @@ class AuthRepository @Inject constructor(val mAuth: FirebaseAuth, val  firebaseF
     suspend fun saveUserAccount(teacher: Teacher)  = firebaseFirestore.collection(Constant.USER_NODE).document(teacher.uid).set(teacher).await()
 
 
+    suspend fun getUserInfo(result: (User?) ->Unit) {
+
+        val loggedInUser = CommonFunction.loggedInUserUID()
+
+        firebaseFirestore.collection(Constant.USER_NODE)
+            .document(loggedInUser).get().addOnSuccessListener {
+
+                it.toObject(User::class.java)?.let {
+                    result.invoke(it)
+                }
+
+
+            }.addOnFailureListener {
+                result.invoke(null)
+
+            }
+
+
+
+    }
 
 
 

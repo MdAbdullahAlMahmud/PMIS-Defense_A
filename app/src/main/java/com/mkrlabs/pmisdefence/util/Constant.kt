@@ -14,6 +14,7 @@ object Constant {
     const val  MESSAGE_NODE = "messages"
     const val  TEAM_MEMBER_NODE = "members"
     const val  GROUP_NODE = "groups"
+    const val  STUDENT_PROJECT_NODE = "student_projects"
 
 
 
