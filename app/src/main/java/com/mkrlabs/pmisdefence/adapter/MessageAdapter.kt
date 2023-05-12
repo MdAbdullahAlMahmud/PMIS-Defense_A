@@ -10,13 +10,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.model.LayoutType
 import com.mkrlabs.pmisdefence.model.Message
 import com.mkrlabs.pmisdefence.model.MessageType
 
 
-class MessageAdapter(val  messageList : List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(val  messageList : List<Message>,val receive_image : String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val ITEM_SENT = 1
     val ITEM_RECEIVE = 2
 
@@ -50,6 +52,8 @@ class MessageAdapter(val  messageList : List<Message>) : RecyclerView.Adapter<Re
             val senderViewHolder = holder as SenderViewHolder
             senderViewHolder.sender_message_item.text= message.message
 
+
+
         }else{
             Log.v("Holder", "Holder Name ->>>>>> Receiver")
             val receiverViewHolder = holder as ReceiverViewHolder
@@ -69,6 +73,12 @@ class MessageAdapter(val  messageList : List<Message>) : RecyclerView.Adapter<Re
                 receiverViewHolder.receiverMessageImageLayout.visibility = View.GONE
                 receiverViewHolder.receiverMessageTextLayout.visibility = View.VISIBLE
                 receiverViewHolder.receive_message_item.setText(message.message)
+
+                Glide.with(receiverViewHolder.itemView)
+                    .load(receive_image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(receiverViewHolder.receive_message_item_imageText)
+
             }
         }
 
@@ -102,6 +112,7 @@ class MessageAdapter(val  messageList : List<Message>) : RecyclerView.Adapter<Re
         var receiverMessageImageLayout: LinearLayout
         var receiverMessageTextLayout: LinearLayout
         var receive_message_image: ImageView
+        var receive_message_item_imageText: ImageView
 
         init {
             receive_message_item = itemView.findViewById(R.id.receive_message_item)
@@ -109,6 +120,7 @@ class MessageAdapter(val  messageList : List<Message>) : RecyclerView.Adapter<Re
             receiverMessageTextLayout = itemView.findViewById(R.id.receiverMessageTextLayout)
             receive_message_image = itemView.findViewById(R.id.receive_message_image)
             receive_message_image_text = itemView.findViewById(R.id.receive_message_image_text)
+            receive_message_item_imageText = itemView.findViewById(R.id.receive_message_item_imageText)
         }
     }
 }

@@ -36,7 +36,7 @@ class ProjectRepository @Inject constructor(
                     val  documentSnapshot = it
                      documentSnapshot.toObject(Teacher::class.java)?.let {
                         val teacher = it
-                         var addTeacherToProjectChatItem = ChatItem(teacher.name,teacher.uid,"Supervisor",Date().time,teacher.uid,ChatTYPE.NORMAL)
+                         var addTeacherToProjectChatItem = ChatItem(teacher.name,teacher.uid,"Supervisor",Date().time,teacher.uid,teacher.image.toString(),ChatTYPE.NORMAL)
                          firebaseFirestore.collection(Constant.PROJECT_NODE)
                              .document(uniqueProjectUID)
                              .collection(Constant.TEAM_MEMBER_NODE)
@@ -45,7 +45,7 @@ class ProjectRepository @Inject constructor(
 
                                  var uniqueGroupID = firebaseFirestore.collection(Constant.PROJECT_NODE).document().id
 
-                                 var groupItem = ChatItem("Project Group Chat ",uniqueGroupID,"with teacher",Date().time,teacher.uid,ChatTYPE.GROUP)
+                                 var groupItem = ChatItem("Project Group Chat ",uniqueGroupID,"with teacher",Date().time,teacher.uid,"",ChatTYPE.GROUP)
 
                                  firebaseFirestore.collection(Constant.PROJECT_NODE)
                                      .document(uniqueProjectUID)
@@ -326,7 +326,7 @@ class ProjectRepository @Inject constructor(
        list.forEach {student ->
 
            var loggedInUser = CommonFunction.loggedInUserUID()
-           var chatItem = ChatItem(student.name,student.uid,UserType.STUDENT.name,Date().time,loggedInUser)
+           var chatItem = ChatItem(student.name,student.uid,UserType.STUDENT.name,Date().time,loggedInUser,student.image)
 
 
            firebaseFirestore.collection(Constant.PROJECT_NODE)

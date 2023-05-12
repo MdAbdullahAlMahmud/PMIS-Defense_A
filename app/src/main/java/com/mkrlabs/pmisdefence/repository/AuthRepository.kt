@@ -53,9 +53,7 @@ class AuthRepository @Inject constructor(val mAuth: FirebaseAuth, val  firebaseF
 
 
     suspend fun getUserInfo(result: (User?) ->Unit) {
-
         val loggedInUser = CommonFunction.loggedInUserUID()
-
         firebaseFirestore.collection(Constant.USER_NODE)
             .document(loggedInUser).get().addOnSuccessListener {
 
@@ -63,15 +61,29 @@ class AuthRepository @Inject constructor(val mAuth: FirebaseAuth, val  firebaseF
                     result.invoke(it)
                 }
 
-
             }.addOnFailureListener {
                 result.invoke(null)
-
             }
-
-
-
     }
+
+    suspend fun getUserInfoWithUID(uid:String , result: (Resource<User>) ->Unit) {
+        firebaseFirestore.collection(Constant.USER_NODE)
+            .document(uid).get().addOnSuccessListener {
+
+                it.toObject(User::class.java)?.let {
+                    result.invoke(Resource.Success(it))
+                }
+
+            }.addOnFailureListener {
+                result.invoke(Resource.Error(it.localizedMessage.toString()))
+            }
+    }
+
+
+
+
+
+
 
 
 
