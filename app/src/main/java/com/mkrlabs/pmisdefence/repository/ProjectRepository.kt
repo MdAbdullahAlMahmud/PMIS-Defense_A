@@ -134,15 +134,20 @@ class ProjectRepository @Inject constructor(
             .addOnSuccessListener {
 
 
-                it.toObject(StudentProject::class.java)?.let {
+                it.toObject(StudentProject::class.java)?.let {studentProject->
+                    println("Student Project ${studentProject.toString()}")
                     firebaseFirestore.collection(Constant.PROJECT_NODE)
-                        .whereEqualTo("projectID",it.projecetId)
                         .get()
                         .addOnSuccessListener {
                             val projects = arrayListOf<Project>()
                             for (document in it) {
+
+                                println(it.toString())
                                 val project = document.toObject(Project::class.java)
-                                projects.add(project)
+                                println("S -> ${studentProject.projecetId} == ${project.projectUID}")
+                                if (project.projectUID.equals(studentProject.projecetId)){
+                                    projects.add(project)
+                                }
                             }
 
                             result.invoke(

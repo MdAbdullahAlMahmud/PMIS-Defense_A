@@ -11,4 +11,8 @@ data class Project(
     var projectMotivation :String= "",
     var projectObjective :String= "",
     var teacher_id :String= "",
-    ):Serializable
+    ):Serializable {
+    override fun toString(): String {
+        return "Project(projectUID='$projectUID', projectID='$projectID', projectType='$projectType', projectName='$projectName', projectDescription='$projectDescription', projectMotivation='$projectMotivation', projectObjective='$projectObjective', teacher_id='$teacher_id')"
+    }
+}
