@@ -1,20 +1,23 @@
 package com.mkrlabs.pmisdefence.model
 
 
-class Teacher(
-    name:String,
-    email :String,
-    password:String,
-    id :String,
-    uid:String,
-
-    var  designation: String,
-    var phone: String,
-    var image: String,
-    var room: String,
-    var type: UserType
+open class Teacher : User{
 
 
 
-    ): User(name,email,password,id,uid) {
+    var image: String? =null
+    var room: String? =null
+    var type: UserType? =null
+
+    constructor()
+    constructor(name:String, email:String, password:String, id :String, uid : String) : super(name,email,password,id,uid)
+    constructor(name:String, email:String, password:String, id :String, uid : String , image :String, room : String ,type: UserType) : this(name,email,password,id,uid){
+        this.image = image
+        this.room = room
+        this.type = type
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
+    }
 }

@@ -5,8 +5,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.mkrlabs.pmisdefence.model.*
+import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
+import java.util.Date
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
@@ -27,12 +29,50 @@ class ProjectRepository @Inject constructor(
 
         firebaseFirestore.collection(Constant.PROJECT_NODE).document(uniqueProjectUID).set(project)
             .addOnSuccessListener {
+                var loggedInTeacherUID = CommonFunction.loggedInUserUID()
 
-                result.invoke(
-                    Resource.Success(Pair(project, "Project created successfully"))
-                )
+                firebaseFirestore.collection(Constant.USER_NODE).document(loggedInTeacherUID).get().addOnSuccessListener {
+
+                    val  documentSnapshot = it
+                     documentSnapshot.toObject(Teacher::class.java)?.let {
+                        val teacher = it
+                         var addTeacherToProjectChatItem = ChatItem(teacher.name,teacher.uid,"Supervisor",Date().time,teacher.uid,ChatTYPE.NORMAL)
+                         firebaseFirestore.collection(Constant.PROJECT_NODE)
+                             .document(uniqueProjectUID)
+                             .collection(Constant.TEAM_MEMBER_NODE)
+                             .document(teacher.uid)
+                             .set(addTeacherToProjectChatItem).addOnSuccessListener {
+
+                                 var uniqueGroupID = firebaseFirestore.collection(Constant.PROJECT_NODE).document().id
+
+                                 var groupItem = ChatItem("Project Group Chat ",uniqueGroupID,"with teacher",Date().time,teacher.uid,ChatTYPE.GROUP)
+
+                                 firebaseFirestore.collection(Constant.PROJECT_NODE)
+                                     .document(uniqueProjectUID)
+                                     .collection(Constant.GROUP_NODE)
+                                     .document(uniqueGroupID)
+                                     .set(groupItem)
+                                 result.invoke(Resource.Success(Pair(project, "Project created successfully")))
+                             }.addOnFailureListener {
+                                 it.printStackTrace()
+                                 result.invoke(
+                                     Resource.Error(it.localizedMessage.toString())
+                                 )
+                             }
+
+                     }
+
+
+                }.addOnFailureListener {
+                    it.printStackTrace()
+                    result.invoke(
+                        Resource.Error(it.localizedMessage.toString())
+                    )
+                }
+
+
             }.addOnFailureListener {
-
+                it.printStackTrace()
             result.invoke(
                 Resource.Error(it.localizedMessage.toString())
             )
@@ -251,17 +291,25 @@ class ProjectRepository @Inject constructor(
 
 
     suspend fun addMemberToProject(projectId : String , list :  List<Student> , result : (Resource<String>) -> Unit){
+
        list.forEach {student ->
-            student.projectId = projectId
-           firebaseFirestore.collection(Constant.USER_NODE)
+
+           var loggedInUser = CommonFunction.loggedInUserUID()
+           var chatItem = ChatItem(student.name,student.uid,UserType.STUDENT.name,Date().time,loggedInUser)
+
+
+           firebaseFirestore.collection(Constant.PROJECT_NODE)
+               .document(projectId)
+               .collection(Constant.TEAM_MEMBER_NODE)
                .document(student.uid)
-               .set(student).addOnSuccessListener{
+               .set(chatItem).addOnSuccessListener{
                }.addOnFailureListener{
                    it.printStackTrace()
                    result.invoke(Resource.Error(it.localizedMessage.toString()))
                }
            }
             result.invoke(Resource.Success("Successfully"))
+
     }
 
 

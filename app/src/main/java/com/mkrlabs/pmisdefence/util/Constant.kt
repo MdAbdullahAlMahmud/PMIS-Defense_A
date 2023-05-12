@@ -12,7 +12,8 @@ object Constant {
     const val  TASK_NODE = "tasks"
     const val  CHAT_NODE = "chats"
     const val  MESSAGE_NODE = "messages"
-    const val  TEAM_MEMBER_NODE = "teams"
+    const val  TEAM_MEMBER_NODE = "members"
+    const val  GROUP_NODE = "groups"
 
 
 

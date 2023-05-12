@@ -4,39 +4,59 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mkrlabs.pmisdefence.model.ChatItem
 import com.mkrlabs.pmisdefence.model.ChatMessage
-import com.mkrlabs.pmisdefence.model.Project
+import com.mkrlabs.pmisdefence.model.ChatTYPE
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
-import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFirestore, val mAuth: FirebaseAuth
 ){
     suspend fun chatUserList(projectId : String , result: (Resource<List<ChatItem>>) -> Unit){
-        firebaseFirestore.collection(Constant.USER_NODE)
+        val userList = arrayListOf<ChatItem>()
+
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.TEAM_MEMBER_NODE)
+            .whereNotEqualTo("uid",CommonFunction.loggedInUserUID())
             .get().addOnSuccessListener {
-                val userList = arrayListOf<ChatItem>()
                 for (document in it) {
                     val user = document.toObject(ChatItem::class.java)
-
-                    if (user.uid != mAuth.currentUser?.uid /*&& user.projectId.equals(projectId)*/){
-                        userList.add(user)
-                    }
-
-                    result.invoke(Resource.Success(userList))
+                    user.chatTYPE = ChatTYPE.NORMAL
+                    userList.add(user)
                 }
+
             }.addOnFailureListener {
                 result.invoke(Resource.Error(it.localizedMessage.toString()))
             }
+
+        firebaseFirestore.collection(Constant.PROJECT_NODE)
+            .document(projectId)
+            .collection(Constant.GROUP_NODE)
+            .whereNotEqualTo("uid",CommonFunction.loggedInUserUID())
+
+            .get().addOnSuccessListener {
+                for (document in it) {
+                    val user = document.toObject(ChatItem::class.java)
+                    user.chatTYPE=ChatTYPE.GROUP
+                    userList.add(user)
+                }
+                result.invoke(Resource.Success(userList))
+
+            }.addOnFailureListener {
+                result.invoke(Resource.Error(it.localizedMessage.toString()))
+            }
+
+
+
+
+
     }
 
     suspend fun  sendMessage(mineChatUID : String , hisChatUID:String ,message: ChatMessage, result: (Resource<ChatMessage>) -> Unit){
 
         val uniqueMessageId = firebaseFirestore.collection(Constant.CHAT_NODE).document().id
-
         message.messageId = uniqueMessageId
-
         firebaseFirestore.collection(Constant.CHAT_NODE)
             .document(mineChatUID)
             .collection(Constant.MESSAGE_NODE)

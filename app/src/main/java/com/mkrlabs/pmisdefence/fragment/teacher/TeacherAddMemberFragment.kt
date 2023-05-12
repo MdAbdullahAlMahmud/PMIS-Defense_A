@@ -74,8 +74,13 @@ class TeacherAddMemberFragment : Fragment() {
 
         memberAdapter.setOnMemberItemClickListener{
 
-            studentList.add(it)
-            addSelectedTeamMemberChipGroup(it)
+            if (!isAlreadyAddedToChipList(it)){
+                studentList.add(it)
+                addSelectedTeamMemberChipGroup(it)
+            }else{
+                CommonFunction.infoToast(view.context,"Already added to the list")
+            }
+
 
         }
 
@@ -119,6 +124,16 @@ class TeacherAddMemberFragment : Fragment() {
         }
     }
 
+    private fun isAlreadyAddedToChipList(item: Student):Boolean{
+
+        studentList.forEach {student ->
+            if (item.uid.equals(student.uid)){
+                return  true
+            }
+        }
+        return false
+
+    }
 
     private fun addSelectedTeamMemberChipGroup(student: Student){
         val chipItem = Chip(context)

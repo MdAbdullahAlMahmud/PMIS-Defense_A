@@ -94,7 +94,7 @@ class SignUpFragment : Fragment() {
                 CommonFunction.successToast(view.context,"Password must be same")
             }
 
-            val teacher = Teacher(name, email,confirm_password,teacher_id,"","Teacher","","","",UserType.TEACHER)
+            val  teacher = Teacher(name,email,confirm_password,teacher_id,"","","",UserType.TEACHER)
             authViewModel.createUserAccount(teacher)
 
         }
