@@ -40,13 +40,10 @@ class ChatFragment : Fragment() {
 
     lateinit var database : DatabaseReference
 
-
-
     val  chatItem : ChatFragmentArgs by navArgs()
-
-    lateinit var CHAT_ROOM_MINE :String
-    lateinit var CHAT_ROOM_HIS :String
-    lateinit var CHAT_ROOM_GROUP :String
+     var CHAT_ROOM_MINE :String = ""
+     var CHAT_ROOM_HIS :String = ""
+     var CHAT_ROOM_GROUP :String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +61,8 @@ class ChatFragment : Fragment() {
         chatMessageList = ArrayList()
         messageAdapter = MessageAdapter(chatMessageList)
         initRecycleView(view.context)
+
+
         binding.sendButton.setOnClickListener {
 
 
@@ -112,33 +111,9 @@ class ChatFragment : Fragment() {
             }
         })
 
+        fetchAllMessage(view.context)
 
-        database.child(Constant.CHAT_NODE)
-            .child(CHAT_ROOM_MINE)
-            .child(MESSAGE_NODE)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    chatMessageList.clear()
-                    for (data in snapshot.children){
-                        var message : Message? = data.getValue(Message::class.java)
-                        if (message != null) {
-                            if (message.senderId.equals(CommonFunction.loggedInUserUID())){
-                                message.layoutType = LayoutType.SENDER
-                            }else{
-                                message.layoutType = LayoutType.RECEIVER
-                            }
-                            chatMessageList.add(message)
-                        }
-                    }
-                    messageAdapter.notifyDataSetChanged()
-                    binding.recyclerView.smoothScrollToPosition(messageAdapter.itemCount)
 
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    CommonFunction.errorToast(view.context,"Error ${error.message}")
-                }
-
-            })
 
 
         database.child(Constant.CHAT_NODE)
@@ -163,6 +138,67 @@ class ChatFragment : Fragment() {
             findNavController().navigateUp()
         }
     }
+
+
+    private fun fetchAllMessage(context: Context){
+        if (chatItem.chatItem.chatTYPE==ChatTYPE.NORMAL){
+            database.child(Constant.CHAT_NODE)
+                .child(CHAT_ROOM_MINE)
+                .child(MESSAGE_NODE)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        chatMessageList.clear()
+                        for (data in snapshot.children){
+                            var message : Message? = data.getValue(Message::class.java)
+                            if (message != null) {
+                                if (message.senderId.equals(CommonFunction.loggedInUserUID())){
+                                    message.layoutType = LayoutType.SENDER
+                                }else{
+                                    message.layoutType = LayoutType.RECEIVER
+                                }
+                                chatMessageList.add(message)
+                            }
+                        }
+                        messageAdapter.notifyDataSetChanged()
+                        binding.recyclerView.smoothScrollToPosition(messageAdapter.itemCount)
+
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        CommonFunction.errorToast(context,"Error ${error.message}")
+                    }
+
+                })
+
+        }else{
+            database.child(Constant.CHAT_NODE)
+                .child(CHAT_ROOM_GROUP)
+                .child(MESSAGE_NODE)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        chatMessageList.clear()
+                        for (data in snapshot.children){
+                            var message : Message? = data.getValue(Message::class.java)
+                            if (message != null) {
+                                if (message.senderId.equals(CommonFunction.loggedInUserUID())){
+                                    message.layoutType = LayoutType.SENDER
+                                }else{
+                                    message.layoutType = LayoutType.RECEIVER
+                                }
+                                chatMessageList.add(message)
+                            }
+                        }
+                        messageAdapter.notifyDataSetChanged()
+                        binding.recyclerView.smoothScrollToPosition(messageAdapter.itemCount)
+
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        CommonFunction.errorToast(context,"Error ${error.message}")
+                    }
+
+                })
+
+        }
+    }
     fun init(){
         buildChatRoom()
         setUpUserProfile()
@@ -173,8 +209,6 @@ class ChatFragment : Fragment() {
     }
 
     fun sendMessage(context: Context, message: Message){
-
-
         if (chatItem.chatItem.chatTYPE==ChatTYPE.NORMAL){
             database.child(Constant.CHAT_NODE)
                 .child(CHAT_ROOM_MINE)
@@ -203,13 +237,7 @@ class ChatFragment : Fragment() {
                     it.printStackTrace()
                 }
 
-
-
-
-
-
         }else{
-            CommonFunction.infoToast(context,"group Calling")
             database.child(Constant.CHAT_NODE)
                 .child(CHAT_ROOM_GROUP)
                 .child(MESSAGE_NODE)

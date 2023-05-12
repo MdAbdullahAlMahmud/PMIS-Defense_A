@@ -26,7 +26,7 @@ class ProjectAdapter : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() 
         holder.itemView.apply {
            // Glide.with(context).load(article.urlToImage).into(holder.binding.ivArticleImage)
             holder.binding.teamProjectName.text = project.projectName
-            holder.binding.teamProjectType.text = project.projectType + " -> ${project.userList?.size}"
+            holder.binding.teamProjectType.text = project.projectType
 
         }
         holder.binding.teamItemCV.setOnClickListener {

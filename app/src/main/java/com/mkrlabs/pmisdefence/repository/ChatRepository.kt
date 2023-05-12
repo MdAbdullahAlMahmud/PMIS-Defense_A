@@ -4,11 +4,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mkrlabs.pmisdefence.model.ChatItem
 import com.mkrlabs.pmisdefence.model.ChatMessage
-import com.mkrlabs.pmisdefence.model.Project
+import com.mkrlabs.pmisdefence.model.ChatTYPE
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
-import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFirestore, val mAuth: FirebaseAuth
@@ -23,6 +22,7 @@ class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFiresto
             .get().addOnSuccessListener {
                 for (document in it) {
                     val user = document.toObject(ChatItem::class.java)
+                    user.chatTYPE = ChatTYPE.NORMAL
                     userList.add(user)
                 }
 
@@ -38,6 +38,7 @@ class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFiresto
             .get().addOnSuccessListener {
                 for (document in it) {
                     val user = document.toObject(ChatItem::class.java)
+                    user.chatTYPE=ChatTYPE.GROUP
                     userList.add(user)
                 }
                 result.invoke(Resource.Success(userList))
@@ -55,9 +56,7 @@ class ChatRepository @Inject constructor( val firebaseFirestore: FirebaseFiresto
     suspend fun  sendMessage(mineChatUID : String , hisChatUID:String ,message: ChatMessage, result: (Resource<ChatMessage>) -> Unit){
 
         val uniqueMessageId = firebaseFirestore.collection(Constant.CHAT_NODE).document().id
-
         message.messageId = uniqueMessageId
-
         firebaseFirestore.collection(Constant.CHAT_NODE)
             .document(mineChatUID)
             .collection(Constant.MESSAGE_NODE)
