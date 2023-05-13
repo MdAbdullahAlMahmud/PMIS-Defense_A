@@ -80,6 +80,8 @@ class MessageAdapter(val  messageList : List<Message>,val receive_image : String
 
                 Glide.with(receiverViewHolder.itemView)
                     .load(receive_image)
+                    .placeholder(R.drawable.empty_person)
+                    .error(R.drawable.empty_person)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(receiverViewHolder.receive_message_item_imageText)
 
