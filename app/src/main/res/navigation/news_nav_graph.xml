@@ -41,6 +41,12 @@
         <action
             android:id="@+id/action_homeFragment_to_teacherAddMemberFragment"
             app:destination="@id/teacherAddMemberFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"

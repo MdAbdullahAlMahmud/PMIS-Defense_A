@@ -45,12 +45,12 @@ class ProjectRepository @Inject constructor(
 
                                  var uniqueGroupID = firebaseFirestore.collection(Constant.PROJECT_NODE).document().id
 
-                                 var groupItem = ChatItem("Project Group Chat ",uniqueGroupID,"with teacher",Date().time,teacher.uid,"",ChatTYPE.GROUP)
+                                 var groupItem = ChatItem("Project Group Chat ",uniqueProjectUID,"with teacher",Date().time,teacher.uid,"",ChatTYPE.GROUP)
 
                                  firebaseFirestore.collection(Constant.PROJECT_NODE)
                                      .document(uniqueProjectUID)
                                      .collection(Constant.GROUP_NODE)
-                                     .document(uniqueGroupID)
+                                     .document(uniqueProjectUID)
                                      .set(groupItem)
                                  result.invoke(Resource.Success(Pair(project, "Project created successfully")))
                              }.addOnFailureListener {

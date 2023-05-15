@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.databinding.UserItemBinding
 import com.mkrlabs.pmisdefence.model.Project
 import com.mkrlabs.pmisdefence.model.Student
@@ -32,6 +33,8 @@ class MemberAddAdapter : RecyclerView.Adapter<MemberAddAdapter.MemberAddViewHold
             holder.binding.userItemIdTV.text = student.id
             Glide.with(this)
                 .load(student.image)
+                .placeholder(R.drawable.empty_person)
+                .error(R.drawable.empty_person)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.binding.userItemImage)
         }

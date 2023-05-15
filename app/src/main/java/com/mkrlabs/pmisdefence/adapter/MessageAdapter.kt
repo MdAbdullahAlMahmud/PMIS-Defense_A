@@ -48,18 +48,14 @@ class MessageAdapter(val  messageList : List<Message>,val receive_image : String
        //Log.v("Holder", "Holder Name ->>>>>> ${holder.itemViewType}")
 
         if ((holder.itemViewType -1) == LayoutType.SENDER.ordinal){
-            Log.v("Holder", "Holder Name ->>>>>> Sender")
             val senderViewHolder = holder as SenderViewHolder
             senderViewHolder.sender_message_item.text= message.message
 
 
 
         }else{
-            Log.v("Holder", "Holder Name ->>>>>> Receiver")
             val receiverViewHolder = holder as ReceiverViewHolder
             if (message.messageType == MessageType.IMAGE) {
-                Log.v("Image", "Image Layout Found")
-                Log.v("MSG", "Adapter -> " + message.toString())
                 receiverViewHolder.receiverMessageImageLayout.visibility = View.VISIBLE
                 receiverViewHolder.receiverMessageTextLayout.visibility = View.GONE
                 if (message.message.isEmpty()) {
@@ -78,8 +74,17 @@ class MessageAdapter(val  messageList : List<Message>,val receive_image : String
                 receiverViewHolder.receiverMessageTextLayout.visibility = View.VISIBLE
                 receiverViewHolder.receive_message_item.setText(message.message)
 
+                if (message.senderName.toString().isEmpty()){
+                    receiverViewHolder.receiverGroupMessageSenderName.visibility=View.GONE
+                }else{
+                    receiverViewHolder.receiverGroupMessageSenderName.visibility=View.VISIBLE
+                    receiverViewHolder.receiverGroupMessageSenderName.text=message.senderName
+
+                }
                 Glide.with(receiverViewHolder.itemView)
                     .load(receive_image)
+                    .placeholder(R.drawable.empty_person)
+                    .error(R.drawable.empty_person)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(receiverViewHolder.receive_message_item_imageText)
 
@@ -113,6 +118,7 @@ class MessageAdapter(val  messageList : List<Message>,val receive_image : String
     inner class ReceiverViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var receive_message_item: TextView
         var receive_message_image_text: TextView
+        var receiverGroupMessageSenderName: TextView
         var receiverMessageImageLayout: LinearLayout
         var receiverMessageTextLayout: LinearLayout
         var receive_message_image: ImageView
@@ -125,6 +131,7 @@ class MessageAdapter(val  messageList : List<Message>,val receive_image : String
             receive_message_image = itemView.findViewById(R.id.receive_message_image)
             receive_message_image_text = itemView.findViewById(R.id.receive_message_image_text)
             receive_message_item_imageText = itemView.findViewById(R.id.receive_message_item_imageText)
+            receiverGroupMessageSenderName = itemView.findViewById(R.id.receiverGroupMessageSenderName)
         }
     }
 }
