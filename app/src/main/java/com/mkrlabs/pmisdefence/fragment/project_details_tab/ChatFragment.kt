@@ -281,7 +281,7 @@ class ChatFragment : Fragment() {
             CHAT_ROOM_HIS = "${hisUID}_${mineUID}"
         }else{
 
-            CHAT_ROOM_GROUP = "XYZXYZXYZ"
+            CHAT_ROOM_GROUP = chatItem.chatItem.uid
         }
 
     }

@@ -47,5 +47,6 @@ class ProjectDetailsFragment : Fragment() {
         binding.projectDetailsBackButton.setOnClickListener {
             findNavController().navigateUp()
         }
+        binding.projectDetailsProjectName.text = project.project.projectName
     }
 }
