@@ -13,10 +13,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.adapter.ProjectAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentHomeBinding
+import com.mkrlabs.pmisdefence.model.ChatItem
+import com.mkrlabs.pmisdefence.model.ChatTYPE
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Resource
+import com.mkrlabs.pmisdefence.util.SharedPref
 import com.mkrlabs.pmisdefence.view_model.ProjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -56,6 +60,7 @@ class HomeFragment : Fragment() {
         }
 
 
+        CommonFunction.successToast(view.context,SharedPref(view.context).getLoggedInUserName())
 
         projectViewModel.fetchProjectList()
         projectViewModel.projectList.observe(viewLifecycleOwner, Observer { response->
@@ -87,6 +92,15 @@ class HomeFragment : Fragment() {
 
 
         projectAdapter.setOnGroupMessageClickListener {
+            var groupChatItem = ChatItem(it.projectName,it.projectUID, it.projectDescription,
+                Date().time,it.teacher_id,"'",
+                ChatTYPE.GROUP)
+
+            val bundle = Bundle().apply {
+                putSerializable("chatItem",groupChatItem)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_chatFragment,bundle)
+
         }
 
     }

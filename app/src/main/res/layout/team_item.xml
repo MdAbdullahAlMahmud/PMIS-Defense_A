@@ -29,9 +29,10 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                app:layout_constraintEnd_toStartOf="@+id/addTeamMemberTeamItem"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -42,7 +43,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/montserrat_alternates"
-                    android:text="Restraw the modern solution"
+                    android:text="Restraw the modern solution "
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
@@ -104,7 +105,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/groupMessage"
+                android:id="@+id/directGroupMessageProjectItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"

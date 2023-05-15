@@ -16,6 +16,7 @@ import com.mkrlabs.pmisdefence.databinding.FragmentLoginBinding
 import com.mkrlabs.pmisdefence.model.Teacher
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Resource
+import com.mkrlabs.pmisdefence.util.SharedPref
 import com.mkrlabs.pmisdefence.view_model.AuthenticationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -84,8 +85,8 @@ class LoginFragment : Fragment() {
                 is  Resource.Success->{
                     hideLoading()
                     response.data?.let { result ->
-                        CommonFunction.successToast(view.context,"Logged In successfully")
-                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                        authViewModel.userWithUIDData.postValue(Resource.Loading())
+                        authViewModel.getSpecificUserWithUID(result.uid)
 
                     }
                 }
@@ -95,6 +96,33 @@ class LoginFragment : Fragment() {
 
                         CommonFunction.errorToast(view.context,"Invalid credential")
 
+                        Log.e(TAG,"An error occured $message")
+                    }
+                }
+
+                is  Resource.Loading->{
+                    showLoading()
+                }
+
+            }
+        })
+
+        authViewModel.userWithUIDData.observe(viewLifecycleOwner, Observer {response->
+            when(response){
+                is  Resource.Success->{
+                    hideLoading()
+                    response.data?.let { result ->
+                        val sharedPref = SharedPref(view.context)
+                        sharedPref.setLoggedInUserName(result.name)
+                        CommonFunction.successToast(view.context,"Logged In successfully")
+                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+
+                    }
+                }
+                is Resource.Error->{
+                    hideLoading()
+                    response.message?.let {message->
+                        CommonFunction.errorToast(view.context,"Something went wrong")
                         Log.e(TAG,"An error occured $message")
                     }
                 }

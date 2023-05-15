@@ -28,6 +28,7 @@ import com.mkrlabs.pmisdefence.model.MessageType
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Constant.MESSAGE_NODE
+import com.mkrlabs.pmisdefence.util.SharedPref
 import com.mkrlabs.pmisdefence.view_model.AuthenticationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
@@ -84,7 +85,7 @@ class ChatFragment : Fragment() {
                 var messageText = binding.messageInput.text.toString()
                 val messageId = database.push().key.toString()
 
-                var messageItem = Message(CommonFunction.loggedInUserUID(),messageText,messageId,MessageType.TEXT,"",Date().time)
+                var messageItem = Message(CommonFunction.loggedInUserUID(),"",messageText,messageId,MessageType.TEXT,"",Date().time)
                 sendMessage(view.context,messageItem)
             }
         }
@@ -248,6 +249,8 @@ class ChatFragment : Fragment() {
                 }
 
         }else{
+            var messageSenderName = SharedPref(context).getLoggedInUserName()
+            message.senderName=messageSenderName
             database.child(Constant.CHAT_NODE)
                 .child(CHAT_ROOM_GROUP)
                 .child(MESSAGE_NODE)

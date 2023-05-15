@@ -25,7 +25,15 @@ class ProjectAdapter : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() 
 
         holder.itemView.apply {
            // Glide.with(context).load(article.urlToImage).into(holder.binding.ivArticleImage)
-            holder.binding.teamProjectName.text = project.projectName
+
+            var modifiedProjectName = StringBuilder()
+
+            if (project.projectName.length>25){
+                modifiedProjectName.append( project.projectName.substring(0,22))
+                modifiedProjectName.append("...")
+            }else modifiedProjectName.append( project.projectName)
+
+            holder.binding.teamProjectName.text = modifiedProjectName
             holder.binding.teamProjectType.text = project.projectType
 
         }
@@ -39,7 +47,7 @@ class ProjectAdapter : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() 
                 it(project)
             }
         }
-        holder.binding.groupMessage.setOnClickListener{
+        holder.binding.directGroupMessageProjectItem.setOnClickListener{
             OnGroupMessageItemClickListener?.let {
                 it(project)
             }

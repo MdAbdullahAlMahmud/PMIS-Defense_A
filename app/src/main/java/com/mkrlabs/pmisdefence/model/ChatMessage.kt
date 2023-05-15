@@ -5,5 +5,6 @@ data class ChatMessage(
     var messageId : String = "",
     var senderId  : String= "",
     var  timestamp : Long=0L,
+    var senderName : String ="",
     var type : MessageType = MessageType.TEXT
 )
