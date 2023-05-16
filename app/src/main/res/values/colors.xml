@@ -18,6 +18,10 @@
     <color name="materialOrange">#FF5252</color>
     <color name="choiceColor">#ADD8E6</color>
 
+    <color name="navStrockColor">#BFBDBD</color>
+
+    <color name="grey_800">#424242</color>
+
 
 
 </resources>

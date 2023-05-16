@@ -1,10 +1,10 @@
 package com.mkrlabs.pmisdefence.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -15,6 +15,7 @@ import com.mkrlabs.pmisdefence.adapter.ProjectAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentHomeBinding
 import com.mkrlabs.pmisdefence.model.ChatItem
 import com.mkrlabs.pmisdefence.model.ChatTYPE
+import com.mkrlabs.pmisdefence.ui.HomeActivity
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Resource
 import com.mkrlabs.pmisdefence.util.SharedPref
@@ -32,6 +33,8 @@ class HomeFragment : Fragment() {
     lateinit var projectViewModel: ProjectViewModel
 
     lateinit var projectAdapter: ProjectAdapter
+
+    lateinit var onMenuItemClickListener: OnMenuItemClickListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,8 +106,15 @@ class HomeFragment : Fragment() {
 
         }
 
+        binding.homeNavDrawerMenu.setOnClickListener {
+            (requireActivity() as HomeActivity).openNavigationDrawer()
+        }
+
     }
 
+    interface  OnMenuItemClickListener{
+        fun OnClick()
+    }
 
     fun hideLoading(){
         binding.teacherHomeProgressBar.visibility= View.GONE
