@@ -1,19 +1,23 @@
 package com.mkrlabs.pmisdefence.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.ActivityNotFoundException
+import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.databinding.ActivityHomeBinding
-import com.mkrlabs.pmisdefence.fragment.HomeFragment
+import com.mkrlabs.pmisdefence.util.SharedPref
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -24,11 +28,13 @@ class HomeActivity : AppCompatActivity() {
 
 
 
+    private lateinit var  sharedPref: SharedPref
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(activityHomeBinding.root)
         navController = findNavController(R.id.newsNavHostFragment)
+        sharedPref = SharedPref(this)
 
        /* appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -40,6 +46,49 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)*/
 
         activityHomeBinding.navView.setupWithNavController(navController)
+        setNavigationItem()
+
+
+
+    }
+
+    fun setNavigationItem(){
+
+        activityHomeBinding.navigationInclude.navUserName.text= sharedPref.getLoggedInUserName()
+
+        activityHomeBinding.navigationInclude.navRateTv.setOnClickListener{
+            try {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=$packageName")
+                    )
+                )
+            } catch (e: ActivityNotFoundException) {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                    )
+                )
+            }
+        }
+
+
+
+        activityHomeBinding.navigationInclude.navLogoutTV.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to log out?")
+                .setPositiveButton("Yes") { dialog, which ->
+                    FirebaseAuth.getInstance().signOut()
+                    navController.navigate(R.id.action_homeFragment_to_loginFragment)
+
+                } // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton("Cancel", null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+        }
 
 
 

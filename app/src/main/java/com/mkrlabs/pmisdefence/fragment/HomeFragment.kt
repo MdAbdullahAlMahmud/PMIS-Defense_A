@@ -51,9 +51,9 @@ class HomeFragment : Fragment() {
         projectViewModel = ViewModelProvider(this)[ProjectViewModel::class.java]
         mAuth  = FirebaseAuth.getInstance()
 
-        binding.logoutButton.setOnClickListener {
-            mAuth.signOut()
-            findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+        binding.notification.setOnClickListener {
+
+
         }
 
 
