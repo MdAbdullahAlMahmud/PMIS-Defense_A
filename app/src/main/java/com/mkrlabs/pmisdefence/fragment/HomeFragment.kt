@@ -1,9 +1,13 @@
 package com.mkrlabs.pmisdefence.fragment
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,12 +17,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.adapter.ProjectAdapter
 import com.mkrlabs.pmisdefence.databinding.FragmentHomeBinding
+import com.mkrlabs.pmisdefence.databinding.NavDesignBinding
 import com.mkrlabs.pmisdefence.model.ChatItem
 import com.mkrlabs.pmisdefence.model.ChatTYPE
+import com.mkrlabs.pmisdefence.model.User
 import com.mkrlabs.pmisdefence.ui.HomeActivity
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Resource
 import com.mkrlabs.pmisdefence.util.SharedPref
+import com.mkrlabs.pmisdefence.view_model.AuthenticationViewModel
 import com.mkrlabs.pmisdefence.view_model.ProjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -31,10 +38,13 @@ class HomeFragment : Fragment() {
 
     lateinit var mAuth : FirebaseAuth
     lateinit var projectViewModel: ProjectViewModel
+    lateinit var authenticationViewModel: AuthenticationViewModel
 
     lateinit var projectAdapter: ProjectAdapter
 
     lateinit var onMenuItemClickListener: OnMenuItemClickListener
+
+    lateinit var navLayout :NavDesignBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,11 +59,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecycleView()
         projectViewModel = ViewModelProvider(this)[ProjectViewModel::class.java]
+        authenticationViewModel = ViewModelProvider(this)[AuthenticationViewModel::class.java]
         mAuth  = FirebaseAuth.getInstance()
 
-        binding.logoutButton.setOnClickListener {
-            mAuth.signOut()
-            findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+        //navLayout = NavDesignBinding.inflate(LayoutInflater.from(context), null,false)
+
+        binding.homeNotification.setOnClickListener {
+
+
         }
 
 
@@ -110,7 +123,11 @@ class HomeFragment : Fragment() {
             (requireActivity() as HomeActivity).openNavigationDrawer()
         }
 
+
+
+
     }
+
 
     interface  OnMenuItemClickListener{
         fun OnClick()

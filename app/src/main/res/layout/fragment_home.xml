@@ -43,12 +43,12 @@
             />
 
         <ImageButton
-            android:id="@+id/logoutButton"
+            android:id="@+id/homeNotification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/baseline_logout_24"
+            android:src="@drawable/baseline_notifications_active_24"
             app:tint="@color/primaryColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
