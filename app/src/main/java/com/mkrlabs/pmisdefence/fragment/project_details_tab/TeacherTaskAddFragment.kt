@@ -23,9 +23,9 @@ import com.mkrlabs.pmisdefence.adapter.TaskAdapter
 import com.mkrlabs.pmisdefence.databinding.CreateTaskBottomSheetBinding
 import com.mkrlabs.pmisdefence.databinding.FragmentTeacherTaskAddBinding
 import com.mkrlabs.pmisdefence.fragment.ProjectDetailsFragment
-import com.mkrlabs.pmisdefence.model.Project
-import com.mkrlabs.pmisdefence.model.TaskItem
+import com.mkrlabs.pmisdefence.model.*
 import com.mkrlabs.pmisdefence.util.CommonFunction
+import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
 import com.mkrlabs.pmisdefence.view_model.ProjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +42,8 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
 
     lateinit var  bottomSheetDialog: BottomSheetDialog
     private lateinit var selectedDate: Date
+
+    lateinit var upsertTaskItem : TaskItem
 
 
     override fun onCreateView(
@@ -62,79 +64,6 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
 
 
 
-       /* binding.teacherTabaddTaskButton.setOnClickListener {
-
-
-
-
-            bottomSheetDialog.show()
-
-
-            selectedDate = Date()
-
-            taskBinding.createTaskDateCV.setOnClickListener {
-                val datePicker = MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Select date")
-                    .setSelection(selectedDate.time)
-                    .build()
-
-                datePicker.addOnPositiveButtonClickListener {
-                    selectedDate = Date(it)
-                    projectViewModel.createTaskDateFormat(selectedDate){
-                        taskBinding.taskDateTV.text = it
-                }
-                }
-
-                datePicker.show(childFragmentManager, "tag")
-
-            }
-
-
-
-            taskBinding.createTaskAddTaskButton.setOnClickListener {
-
-                 val taskDescription = taskBinding.createTaskTaskDescriptionEdt.text.toString()
-                 if (taskDescription.isEmpty()){
-                     taskBinding.createTaskTaskDescriptionEdt.error = "required"
-                     return@setOnClickListener
-                 }
-
-
-
-
-
-                val  taskItem = TaskItem(taskDescription,"",selectedDate.time,false)
-                projectViewModel.createTaskItemState.postValue(Resource.Loading())
-                projectViewModel.createNewTask(projectId,taskItem)
-
-            }
-
-
-            projectViewModel.createTaskItemState.observe(viewLifecycleOwner, Observer {response->
-
-                when(response){
-
-                    is Resource.Success->{
-                        hideLoading()
-                        response.data?.let {
-                            CommonFunction.successToast(view.context,it)
-                            bottomSheetDialog.dismiss()
-                            fetchTaskList()
-                        }
-                    }
-
-                    is Resource.Loading->{
-                        showLoading()
-                    }
-                    is Resource.Error->{
-                        hideLoading()
-                        bottomSheetDialog.dismiss()
-                        CommonFunction.successToast(view.context,response.message.toString())
-                    }
-                }
-            })
-
-        }*/
 
         binding.teacherTabaddTaskButton.setOnClickListener {
             taskUpsert(false,TaskItem())
@@ -183,7 +112,9 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
                         bottomSheetDialog.dismiss()
 
                         CommonFunction.successToast(view.context,it)
+                        sendNotificationToGroupsPeople()
                         fetchTaskList()
+
                     }
                 }
 
@@ -227,6 +158,20 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
 
 
     }
+
+    private fun sendNotificationToGroupsPeople() {
+
+        var  to = Constant.GROUP_TASK_NOTIFICATION_TOPIC
+
+        var title = "New Task"
+        var body = "You got a new task to do"
+
+        val metaData = MetaData(project_id = projectId)
+        var notification = NotificationItem(to, NotificationBody(title, body),metaData)
+
+        projectViewModel.sendNotificationToSpecificGroup(notification)
+    }
+
     private fun taskUpsert(isEdit: Boolean,taskItem: TaskItem){
 
         bottomSheetDialog.show()
@@ -279,7 +224,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
 
 
 
-            val upsertTaskItem = TaskItem()
+             upsertTaskItem = TaskItem()
             upsertTaskItem.id=""
             upsertTaskItem.description=taskDescription
             upsertTaskItem.timestamp =selectedDate.time
