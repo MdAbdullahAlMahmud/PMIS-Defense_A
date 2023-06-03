@@ -20,7 +20,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/dummy_person"
+            android:src="@drawable/empty_person"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +31,8 @@
             android:layout_marginTop="8dp"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:text="User Name"
+            android:text=""
+            android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@+id/nav_user_pic"
             app:layout_constraintTop_toTopOf="@+id/nav_user_pic" />
 
@@ -59,7 +60,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/navProfileTV"
+                    android:id="@+id/navDeveloperTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
