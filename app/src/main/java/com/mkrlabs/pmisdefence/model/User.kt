@@ -6,16 +6,18 @@ open class User{
      var id :String= ""
      var uid:String= ""
     var type: UserType? =null
+    var deviceToken: String? =null
 
      constructor()
 
-     constructor(name: String,email: String , password : String, id : String, uid : String, userType: UserType){
+     constructor(name: String,email: String , password : String, id : String, uid : String, userType: UserType, deviceToken : String){
          this.name = name
          this.email = email
          this.password = password
          this.id = id
          this.uid = uid
          this.type = userType
+         this.deviceToken = deviceToken
      }
 
  }
