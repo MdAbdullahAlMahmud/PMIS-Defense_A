@@ -2,7 +2,12 @@ package com.mkrlabs.pmisdefence.util
 
 object Constant {
 
+
     const val APPNAME = "PMIS"
+    const val BASE_URL = "https://fcm.googleapis.com/fcm/"
+    const val CONNECT_TIMEOUT = 1000L
+    const val WRITE_TIMEOUT = 1000L
+    const val READ_TIMEOUT = 3000L
     const val TYPING_STATUS_KEY = "typing_status"
 
     const val USER_NODE = "users"
@@ -15,6 +20,8 @@ object Constant {
     const val  TEAM_MEMBER_NODE = "members"
     const val  GROUP_NODE = "groups"
     const val  STUDENT_PROJECT_NODE = "student_projects"
+
+    const val  GROUP_TASK_NOTIFICATION_TOPIC = "/topics/group_task"
 
 
 

@@ -4,7 +4,9 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.mkrlabs.pmisdefence.api.AppAPI
 import com.mkrlabs.pmisdefence.model.*
+import com.mkrlabs.pmisdefence.model.notifications.TopicWiseNotification
 import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.Constant
 import com.mkrlabs.pmisdefence.util.Resource
@@ -14,8 +16,14 @@ import javax.inject.Inject
 
 class ProjectRepository @Inject constructor(
     val firebaseFirestore: FirebaseFirestore,
-    val mAuth: FirebaseAuth
+    val mAuth: FirebaseAuth,
+    val api: AppAPI
 ) {
+
+
+    suspend fun sendNotification(headerToken : String ,notificationItem: NotificationItem) = api.postNotification(notificationItem,headerToken)
+    suspend fun sendNotificationTopicWise(headerToken : String ,notificationItem: TopicWiseNotification) = api.topicWiseNotification(notificationItem,headerToken)
+
     suspend fun createProject(
         project: Project,
         result: (Resource<Pair<Project, String>>) -> Unit

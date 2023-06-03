@@ -23,7 +23,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.ktx.messaging
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.databinding.ActivityHomeBinding
 import com.mkrlabs.pmisdefence.databinding.NavDesignBinding
@@ -143,6 +145,18 @@ class HomeActivity : AppCompatActivity() {
             uploadTokenToFirebase(token)
 
         })
+
+        Firebase.messaging.subscribeToTopic("group_task")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed"
+                if (!task.isSuccessful) {
+                    msg = "Subscribe failed"
+                }
+                Log.d("FirebaseToken", msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            }
+
+
     }
 
     private fun  uploadTokenToFirebase(token:String){
