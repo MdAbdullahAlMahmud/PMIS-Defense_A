@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -31,6 +32,12 @@ class NotificationService :  FirebaseMessagingService() {
 
         override fun onMessageReceived(message: RemoteMessage) {
             super.onMessageReceived(message)
+
+            message.data.forEach { key, value ->
+
+                Log.v("FirebaseToken", "$key -> $value")
+            }
+
             showNotification(
                 message.notification?.title, message.notification?.body,
                 message.notification?.imageUrl
@@ -39,7 +46,7 @@ class NotificationService :  FirebaseMessagingService() {
 
         private fun showNotification(title: String?, message: String?, imageUrl: Uri?) {
 
-            var channelId = "all_notification"
+            var channelId = "pmis_channel"
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             createNotificationChannel(notificationManager, channelId)
