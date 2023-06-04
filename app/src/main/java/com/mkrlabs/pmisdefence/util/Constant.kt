@@ -21,7 +21,7 @@ object Constant {
     const val  GROUP_NODE = "groups"
     const val  STUDENT_PROJECT_NODE = "student_projects"
 
-    const val  GROUP_TASK_NOTIFICATION_TOPIC = "/topics/group_task"
+    const val  GROUP_NOTIFICATION_TOPIC = "/topics/"
 
 
 

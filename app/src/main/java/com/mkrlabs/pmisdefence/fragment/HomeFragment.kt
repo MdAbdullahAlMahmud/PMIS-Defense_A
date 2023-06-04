@@ -71,61 +71,16 @@ class HomeFragment : Fragment() {
 
         binding.homeNotification.setOnClickListener {
 
-            /*if (ActivityCompat.checkSelfPermission(view.context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-
-                val notificationService = NotificationService()
-
-                val title = "Notification Title"
-                val msg = "This is a demo description"
-                val url = ""
-
-                CommonFunction.infoToast(view.context,"Permission Not Granted ")
-            }else{
-                showNotification(view.context)
-
-                CommonFunction.infoToast(view.context,"NO Need for permission")
-
-            }*/
 
            //var to = "fPC7c0oUQpGdoch_MKanYV:APA91bGrpKBwXuJwnF3tuV6g5CQmJRWTvDs0mB7GBfNVD54nTa37NBxWonFm2wyEpekz1lR6QW2I3txZ9r4aknAiRojFFtn-J1mpF0BJemlPi3O9eC3UavGkfU-gXFDATZI6TEKht3fk"
 
-           var  to = Constant.GROUP_TASK_NOTIFICATION_TOPIC
-
-            var title = "New Task Alert"
-            var body = "Task description is mentioned "
-
-            var projectId = "ASDF"
-            val metaData = MetaData(project_id = projectId)
-             var notification = NotificationItem(to, NotificationBody(title, body),metaData)
-
-            projectViewModel.sendNotificationToSpecificGroup(notification)
 
 
 
-           /* val topic_name = Constant.GROUP_TASK_NOTIFICATION_TOPIC
 
-            var topicWiseNotification = TopicWiseNotification(Message(notification = Notification(title,body), topic = topic_name))
-
-
-            projectViewModel.sendNotificationTopicWise(topicWiseNotification)*/
 
         }
 
-       /* projectViewModel.sendNotificationState.observe(viewLifecycleOwner, Observer {response ->
-            when (response) {
-                is Resource.Success -> {
-                    CommonFunction.errorToast(view.context, response.message.toString())
-
-                }
-                is Resource.Loading -> {
-                }
-                is Resource.Error -> {
-
-
-                    CommonFunction.errorToast(view.context, response.message.toString())
-                }
-            }
-        })*/
 
             binding.addNewTeamHome.setOnClickListener {
 

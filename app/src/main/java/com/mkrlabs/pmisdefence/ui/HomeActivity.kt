@@ -146,15 +146,7 @@ class HomeActivity : AppCompatActivity() {
 
         })
 
-        Firebase.messaging.subscribeToTopic("group_task")
-            .addOnCompleteListener { task ->
-                var msg = "Subscribed"
-                if (!task.isSuccessful) {
-                    msg = "Subscribe failed"
-                }
-                Log.d("FirebaseToken", msg)
-                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-            }
+
 
 
     }
