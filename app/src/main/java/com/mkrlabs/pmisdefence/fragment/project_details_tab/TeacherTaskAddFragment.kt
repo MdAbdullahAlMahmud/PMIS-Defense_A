@@ -161,7 +161,7 @@ class TeacherTaskAddFragment (val  projectId :String): Fragment() {
 
     private fun sendNotificationToGroupsPeople() {
 
-        var  to = Constant.GROUP_TASK_NOTIFICATION_TOPIC
+        var  to = "${Constant.GROUP_NOTIFICATION_TOPIC}$projectId"
 
         var title = "New Task"
         var body = "You got a new task to do"
