@@ -20,12 +20,14 @@
     <color name="navStrockColor">#BFBDBD</color>
 
     <color name="grey_800">#424242</color>
-    <color name="textColor">#202020</color>
-    <color name="textColorHint">#4A4A4A</color>
-    <color name="cardBackgroundColor">#D5D5D5</color>
-    <color name="cardBackgroundSecondaryColor">#DDDDDD</color>
-    <color name="appBarColor">#E1E1E1</color>
-    <color name="iconColor">#202020</color>
+
+    <color name="textColor">#ffffff</color>
+    <color name="textColorHint">#66FFFFFF</color>
+    <color name="cardBackgroundColor">#202020</color>
+    <color name="cardBackgroundSecondaryColor">#121111</color>
+    <color name="appBarColor">#121111</color>
+    <color name="iconColor">#C3C3C3</color>
+
 
 
 

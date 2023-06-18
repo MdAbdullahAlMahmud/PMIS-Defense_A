@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardBackgroundColor"
     tools:context=".fragment.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,6 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:background="@color/appBarColor"
+        android:elevation="10dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="All Project"
-            android:textColor="@color/black"
+            android:textColor="@color/textColor"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,6 +40,7 @@
             android:padding="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            app:tint="@color/iconColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -49,7 +54,7 @@
             android:padding="10dp"
             android:background="?android:attr/selectableItemBackground"
             android:src="@drawable/baseline_notifications_active_24"
-            app:tint="@color/primaryColor"
+            app:tint="@color/iconColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

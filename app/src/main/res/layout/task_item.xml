@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:background="@color/cardBackgroundSecondaryColor">
 
 
         <LinearLayout
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_alternates"
                 android:text="Task Title"
-                android:textColor="@color/black"
+                android:textColor="@color/textColor"
                 android:textSize="18sp"
 
                 />
@@ -45,6 +45,7 @@
                 <ImageView
                     android:layout_width="10dp"
                     android:layout_height="10dp"
+                    app:tint="@color/iconColor"
                     android:src="@drawable/baseline_calendar_today_24" />
                 <TextView
                     android:id="@+id/taskDeadLineItemTV"
@@ -52,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:text="May 1 ,2023"
                     android:visibility="visible"
-                    android:textColor="@color/black"
+                    android:textColor="@color/textColor"
                     android:textSize="10dp"
                     android:layout_marginStart="8dp"
                     />
@@ -82,6 +83,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:padding="10dp"
+            android:tint="@color/iconColor"
             android:background="?android:attr/selectableItemBackground"
             app:srcCompat="@drawable/baseline_more_vert_24" />
 

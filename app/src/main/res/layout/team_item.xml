@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,7 +13,7 @@
         app:cardCornerRadius="12dp"
         android:layout_margin="10dp"
         android:clickable="true"
-        android:background="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="@color/cardBackgroundSecondaryColor"
+            android:foreground="?android:attr/selectableItemBackground"
 
             >
 
@@ -44,7 +46,7 @@
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/montserrat_alternates"
                     android:text="Restraw the modern solution "
-                    android:textColor="@color/black"
+                    android:textColor="@color/textColor"
                     android:textSize="18sp" />
 
                 <TextView
@@ -54,7 +56,7 @@
                     android:layout_marginStart="16dp"
                     android:fontFamily="@font/montserrat_alternates"
                     android:text="Project"
-                    android:textColor="@color/black"
+                    android:textColor="@color/textColor"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -67,6 +69,7 @@
                 android:layout_marginEnd="16dp"
                 android:padding="10dp"
                 android:clickable="true"
+                app:tint="@color/iconColor"
                 android:background="?android:attr/selectableItemBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -114,7 +117,7 @@
                 android:clickable="true"
                 android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-
+                app:tint="@color/iconColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/baseline_message_24" />
 
@@ -125,6 +128,7 @@
                 android:layout_marginEnd="8dp"
                 android:padding="10dp"
                 android:clickable="true"
+                app:tint="@color/iconColor"
                 android:background="?android:attr/selectableItemBackground"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView4"
                 app:layout_constraintEnd_toStartOf="@+id/imageView4"

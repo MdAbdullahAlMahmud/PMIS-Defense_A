@@ -7,15 +7,16 @@
     app:cardCornerRadius="10dp"
     android:clickable="true"
     android:layout_margin="10dp"
-    android:background="?android:attr/selectableItemBackground">
+    >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/chatItemCL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"
-        android:padding="12dp">
+            android:background="@color/cardBackgroundSecondaryColor"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:padding="12dp">
 
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -37,7 +38,7 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/montserrat_alternates"
                 android:text="Mr Co-Supervisor"
-                android:textColor="@color/black"
+                android:textColor="@color/textColor"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/chatUserImage"
