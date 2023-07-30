@@ -13,8 +13,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.mkrlabs.pmisdefence.BuildConfig
 import com.mkrlabs.pmisdefence.R
 import com.mkrlabs.pmisdefence.databinding.ActivityHomeBinding
+import com.mkrlabs.pmisdefence.util.CommonFunction
 import com.mkrlabs.pmisdefence.util.SharedPref
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -91,6 +93,19 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
+        activityHomeBinding.navigationInclude.navDeveloperTV.setOnClickListener {
+            closeNavigationDrawer()
+            navController.navigate(R.id.action_homeFragment_to_informationFragment)
+        }
+
+        activityHomeBinding.navigationInclude.navVersion.setOnClickListener {
+
+            val versionName = BuildConfig.VERSION_NAME
+            val  appName = resources.getString(R.string.app_name)
+            val appNameWithVersion = " $appName $versionName"
+            CommonFunction.infoToast(this@HomeActivity,appNameWithVersion)
+        }
+
 
     }
 
@@ -98,7 +113,9 @@ class HomeActivity : AppCompatActivity() {
         activityHomeBinding.drawerLayout.open()
     }
 
-
+    fun closeNavigationDrawer(){
+        activityHomeBinding.drawerLayout.closeDrawers()
+    }
     /*override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }*/
